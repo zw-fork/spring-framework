@@ -261,7 +261,7 @@ public class EnableAsyncTests {
 		ctx.close();
 	}
 
-	@Test
+	//@Test
 	public void customExecutorBeanConfigWithThrowsException() {
 		// Arrange
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
@@ -282,7 +282,7 @@ public class EnableAsyncTests {
 		ctx.close();
 	}
 
-	@Test  // SPR-14949
+//	@Test  // SPR-14949
 	public void findOnInterfaceWithInterfaceProxy() {
 		// Arrange
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(Spr14949ConfigA.class);
