@@ -79,6 +79,9 @@ public class EventListenerMethodProcessor
 	private final Set<Class<?>> nonAnnotatedClasses = Collections.newSetFromMap(new ConcurrentHashMap<>(64));
 
 
+	/**
+	 * 用于注入 ApplicationContext
+	 **/
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		Assert.isTrue(applicationContext instanceof ConfigurableApplicationContext,
@@ -86,12 +89,17 @@ public class EventListenerMethodProcessor
 		this.applicationContext = (ConfigurableApplicationContext) applicationContext;
 	}
 
+	/**
+	 * 实现BeanFactoryPostProcessor接口以后，可以在 spring 初始化 bean 时通过这个方法进行自定义的 bean 初始化。
+	 * 但是，会导致 bean 过早的初始化，可能会导致一些意想不到的副作用。
+	 **/
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 		this.beanFactory = beanFactory;
-
+		// 获取传入 class 类型的 bean 列表
 		Map<String, EventListenerFactory> beans = beanFactory.getBeansOfType(EventListenerFactory.class, false, false);
 		List<EventListenerFactory> factories = new ArrayList<>(beans.values());
+		// 将所有的 EventListnerFactory 实例 bean 按照 注解顺序进行排序（这是为了让 @Order 注解生效）
 		AnnotationAwareOrderComparator.sort(factories);
 		this.eventListenerFactories = factories;
 	}

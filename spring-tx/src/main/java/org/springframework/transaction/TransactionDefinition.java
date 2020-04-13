@@ -40,6 +40,18 @@ import org.springframework.lang.Nullable;
  * @see PlatformTransactionManager#getTransaction(TransactionDefinition)
  * @see org.springframework.transaction.support.DefaultTransactionDefinition
  * @see org.springframework.transaction.interceptor.TransactionAttribute
+ *
+ * 主要定义了有哪些事务属性可以指定：
+ *
+ *
+ * □事务的传播行为(Propagation Behavior)
+ *
+ * □事务的隔离(Isolation)级别
+ *
+ * □事务的超时时间(Timeout)
+ *
+ * □是否为只读(Readonly)事务
+ *
  */
 public interface TransactionDefinition {
 

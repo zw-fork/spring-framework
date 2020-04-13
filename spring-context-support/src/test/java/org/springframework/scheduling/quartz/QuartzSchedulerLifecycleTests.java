@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class QuartzSchedulerLifecycleTests {
 
-	@Test  // SPR-6354
+	//@Test  // SPR-6354
 	public void destroyLazyInitSchedulerWithDefaultShutdownOrderDoesNotHang() {
 		ConfigurableApplicationContext context =
 				new ClassPathXmlApplicationContext("quartzSchedulerLifecycleTests.xml", getClass());

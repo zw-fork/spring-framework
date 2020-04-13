@@ -425,6 +425,8 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	 */
 	public void processInjection(Object bean) throws BeanCreationException {
 		Class<?> clazz = bean.getClass();
+		// 获取要注入的对象元数据。封装了所有要注入的对象
+		// 注入元数据，包含了目标Bean的Class对象，和注入元素（InjectionElement）集合
 		InjectionMetadata metadata = findAutowiringMetadata(clazz.getName(), clazz, null);
 		try {
 			metadata.inject(bean, null, null);

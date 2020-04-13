@@ -169,6 +169,7 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取默认的类加载器
 	 * Return the default ClassLoader to use: typically the thread context
 	 * ClassLoader, if available; the ClassLoader that loaded the ClassUtils
 	 * class will be used as fallback.
@@ -186,17 +187,26 @@ public abstract class ClassUtils {
 	public static ClassLoader getDefaultClassLoader() {
 		ClassLoader cl = null;
 		try {
+			//获取当前线程的context class loader
 			cl = Thread.currentThread().getContextClassLoader();
 		}
 		catch (Throwable ex) {
 			// Cannot access thread context ClassLoader - falling back...
 		}
 		if (cl == null) {
+			/**
+			 * 通过Thread.getContextClassLoader()方法获取到的是线程绑定的类加载器，这个classloader是父线程在创建子线程的时候，
+			 * 通过Thread.setContextClassLoader()方法设置进去，用于该线程加载类和资源的，如果没有调用这个方法，
+			 * 那么直接使用父线程的classLoader；如果这个方法返回null，
+			 * 代表该线程直接使用的系统class loader或者bootstrap class loader
+			 */
 			// No thread context class loader -> use class loader of this class.
+			// 如果没有context loader，使用当前类的类加载器；
 			cl = ClassUtils.class.getClassLoader();
 			if (cl == null) {
 				// getClassLoader() returning null indicates the bootstrap ClassLoader
 				try {
+					// 如果当前类加载器无法获取，获取系统启动类加载器bootstrap ClassLoader
 					cl = ClassLoader.getSystemClassLoader();
 				}
 				catch (Throwable ex) {
@@ -334,6 +344,7 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 用来判断指定类名的类是否存在，是否可以进行加载
 	 * Determine whether the {@link Class} identified by the supplied name is present
 	 * and can be loaded. Will return {@code false} if either the class or
 	 * one of its dependencies is not present or cannot be loaded.

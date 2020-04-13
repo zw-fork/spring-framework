@@ -58,6 +58,11 @@ import org.springframework.util.StringUtils;
  * @author Juergen Hoeller
  * @author Sam Brannen
  * @since 3.2
+ *
+ * SpringFactoriesLoader工厂加载机制是Spring内部提供的一个约定俗成的加载方式，
+ * 与java spi类似，只需要在模块的META-INF/spring.factories文件，
+ * 这个Properties格式的文件中的key是接口、注解、或抽象类的全名，value是以逗号 “ , “ 分隔的实现类，
+ * 使用SpringFactoriesLoader来实现相应的实现类注入Spirng容器中
  */
 public final class SpringFactoriesLoader {
 
@@ -108,6 +113,7 @@ public final class SpringFactoriesLoader {
 	}
 
 	/**
+	 * 获取spring.factories文件中，key为factoryType的value集合
 	 * Load the fully qualified class names of factory implementations of the
 	 * given type from {@value #FACTORIES_RESOURCE_LOCATION}, using the given
 	 * class loader.
@@ -122,6 +128,12 @@ public final class SpringFactoriesLoader {
 		return loadSpringFactories(classLoader).getOrDefault(factoryTypeName, Collections.emptyList());
 	}
 
+	/**
+	 * 加载 META-INF/spring.factories 文件中所有Properties数据
+	 * key为类全名；value为逗号隔开的类全名
+	 * @param classLoader classLoader
+	 * @return map
+	 */
 	private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoader classLoader) {
 		MultiValueMap<String, String> result = cache.get(classLoader);
 		if (result != null) {

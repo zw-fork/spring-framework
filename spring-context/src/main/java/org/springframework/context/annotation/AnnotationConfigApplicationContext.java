@@ -53,8 +53,10 @@ import org.springframework.util.Assert;
  */
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
 
+	// 注解模式下的bean定义扫描器
 	private final AnnotatedBeanDefinitionReader reader;
 
+	// 注解模式下，扫描classPath下加了注解的bean扫描器
 	private final ClassPathBeanDefinitionScanner scanner;
 
 
@@ -85,11 +87,16 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 		this();
+		//注册配置类。扫描配置类的注解
+		//将配置类包装成beanDefinition，放入beanDefinitionMap类
 		register(componentClasses);
+		// IOC容器刷新接口。
+		// 将配置类中的bean方法，包装成beanDefinition，放入beanDefinitionMap类
 		refresh();
 	}
 
 	/**
+	 * 扫描指定包及子包下所有的类，识别需要注册的类，将其加入容器。
 	 * Create a new AnnotationConfigApplicationContext, scanning for components
 	 * in the given packages, registering bean definitions for those components,
 	 * and automatically refreshing the context.
@@ -155,6 +162,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * {@link Configuration @Configuration} classes
 	 * @see #scan(String...)
 	 * @see #refresh()
+	 *
+	 * 使用AnnotationConfigApplicationContext(String... basePackages)进行包扫描时，
+	 * 要为容器注册一个新的Bean，必须手动调用容器的refresh()方法刷新容器，触发容器对新注册的Bean的处理
 	 */
 	@Override
 	public void register(Class<?>... componentClasses) {
@@ -169,6 +179,8 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * @param basePackages the packages to scan for component classes
 	 * @see #register(Class...)
 	 * @see #refresh()
+	 *
+	 * 扫描指定包路径及其子包下的注解类，为了使新添加的类被处理，必须手动调用refresh()方法刷新容器
 	 */
 	@Override
 	public void scan(String... basePackages) {

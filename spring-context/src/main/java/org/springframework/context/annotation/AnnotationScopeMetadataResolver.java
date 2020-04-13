@@ -24,6 +24,7 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.util.Assert;
 
 /**
+ * 主要负责对Scope注解的解析
  * A {@link ScopeMetadataResolver} implementation that by default checks for
  * the presence of Spring's {@link Scope @Scope} annotation on the bean class.
  *
@@ -74,11 +75,20 @@ public class AnnotationScopeMetadataResolver implements ScopeMetadataResolver {
 	}
 
 
+	/**
+	 * 解析注解Bean定义类中的作用域元数据
+	 * @param definition the target bean definition
+	 * @return
+	 */
 	@Override
 	public ScopeMetadata resolveScopeMetadata(BeanDefinition definition) {
 		ScopeMetadata metadata = new ScopeMetadata();
 		if (definition instanceof AnnotatedBeanDefinition) {
 			AnnotatedBeanDefinition annDef = (AnnotatedBeanDefinition) definition;
+			/**
+			 * 从注解Bean定义类的属性中查找属性为"scope"的值
+			 * AnnotationConfigUtils.attributesFor()方法将Bean中所有的注解和注解的值存放在一个map中
+			 */
 			AnnotationAttributes attributes = AnnotationConfigUtils.attributesFor(
 					annDef.getMetadata(), this.scopeAnnotationType);
 			if (attributes != null) {

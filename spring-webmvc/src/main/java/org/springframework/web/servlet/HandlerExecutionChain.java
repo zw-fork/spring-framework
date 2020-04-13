@@ -128,6 +128,7 @@ public class HandlerExecutionChain {
 
 
 	/**
+	 * Handler拦截器处理
 	 * Apply preHandle methods of registered interceptors.
 	 * @return {@code true} if the execution chain should proceed with the
 	 * next interceptor or the handler itself. Else, DispatcherServlet assumes

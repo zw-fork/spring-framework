@@ -107,4 +107,12 @@
 	<suppress files="sockjs[\\/]transport[\\/]TransportType" checks="JavadocVariable" />
 	<suppress files="src[\\/]test[\\/]java[\\/]org[\\/]springframework[\\/]web[\\/]reactive[\\/]protobuf[\\/].*" checks=".*" />
 
+	<!-- 跳过指定包的checkstyle检测 -->
+	<suppress files="[\\/]src[\\/]main[\\/]java[\\/]com[\\/]zw[\\/]" checks=".*" />
+	<suppress files="[\\/]src[\\/]test[\\/]java[\\/]com[\\/]zw[\\/]" checks=".*" />
+
+	<!-- 跳过指定包的checkstyle检测 -->
+	<suppress files="[\\/]src[\\/]main[\\/]java[\\/]" checks=".*" />
+	<suppress files="[\\/]src[\\/]test[\\/]java[\\/]" checks=".*" />
+
 </suppressions>

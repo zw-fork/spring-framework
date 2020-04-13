@@ -39,6 +39,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * Bean信息描述类
  * Base class for concrete, full-fledged {@link BeanDefinition} classes,
  * factoring out common properties of {@link GenericBeanDefinition},
  * {@link RootBeanDefinition}, and {@link ChildBeanDefinition}.
@@ -102,12 +103,14 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	/**
 	 * Constant that indicates no dependency check at all.
 	 * @see #setDependencyCheck
+	 * 不需要检查依赖
 	 */
 	public static final int DEPENDENCY_CHECK_NONE = 0;
 
 	/**
 	 * Constant that indicates dependency checking for object references.
 	 * @see #setDependencyCheck
+	 * 检查对象引用的依赖
 	 */
 	public static final int DEPENDENCY_CHECK_OBJECTS = 1;
 
@@ -115,6 +118,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Constant that indicates dependency checking for "simple" properties.
 	 * @see #setDependencyCheck
 	 * @see org.springframework.beans.BeanUtils#isSimpleProperty
+	 * 简单属性依赖
 	 */
 	public static final int DEPENDENCY_CHECK_SIMPLE = 2;
 
@@ -122,6 +126,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Constant that indicates dependency checking for all properties
 	 * (object references as well as "simple" properties).
 	 * @see #setDependencyCheck
+	 * 对象属性和简单属性都检查依赖
 	 */
 	public static final int DEPENDENCY_CHECK_ALL = 3;
 
@@ -138,26 +143,50 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	public static final String INFER_METHOD = "(inferred)";
 
 
+	/**
+	 * 用于保存bean组件的class对象
+	 */
 	@Nullable
 	private volatile Object beanClass;
 
+	/**
+	 * bean的作用范围
+	 */
 	@Nullable
 	private String scope = SCOPE_DEFAULT;
 
+	/**
+	 * 判断当前bean是否为抽象类
+	 */
 	private boolean abstractFlag = false;
 
+	/**
+	 * 判断当前bean是不是懒加载的
+	 */
 	@Nullable
 	private Boolean lazyInit;
 
+	/**
+	 * 默认的注入模型是0，不支持外部注入
+	 */
 	private int autowireMode = AUTOWIRE_NO;
 
+	/**
+	 * 默认的依赖检查模式
+	 */
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
+	/**
+	 * 当前的bean创建，必须依赖哪个bean先创建
+	 */
 	@Nullable
 	private String[] dependsOn;
 
 	private boolean autowireCandidate = true;
 
+	/**
+	 * bean存在多个时，先注入该属性为true的
+	 */
 	private boolean primary = false;
 
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();

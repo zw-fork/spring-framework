@@ -93,6 +93,7 @@ import org.springframework.util.Assert;
  */
 public class GenericApplicationContext extends AbstractApplicationContext implements BeanDefinitionRegistry {
 
+	// DefaultListableBeanFactory为beanFactory接口底层实现，功能最全
 	private final DefaultListableBeanFactory beanFactory;
 
 	@Nullable
@@ -109,6 +110,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 * @see #refresh
 	 */
 	public GenericApplicationContext() {
+		//创建BeanFactory。使用DefaultListableBeanFactory作为默认BeanFactory
 		this.beanFactory = new DefaultListableBeanFactory();
 	}
 
@@ -290,6 +292,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 */
 	@Override
 	public final ConfigurableListableBeanFactory getBeanFactory() {
+		//DefaultListableBeanFactory
 		return this.beanFactory;
 	}
 

@@ -121,6 +121,8 @@ abstract class AnnotationReadingVisitorUtils {
 	 * @return the merged annotation attributes, or {@code null} if no
 	 * matching annotation is present in the {@code attributesMap}
 	 * @since 4.0.3
+	 *
+	 * 从map中获取保存的注解元数据
 	 */
 	@Nullable
 	public static AnnotationAttributes getMergedAnnotationAttributes(

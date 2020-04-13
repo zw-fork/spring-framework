@@ -166,6 +166,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 			registerDefaultFilters();
 		}
 		setEnvironment(environment);
+		// 为容器设置资源加载器
 		setResourceLoader(resourceLoader);
 	}
 
@@ -273,6 +274,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		Assert.notEmpty(basePackages, "At least one base package must be specified");
 		Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<>();
 		for (String basePackage : basePackages) {
+			//获取指定包下的@Compent注解注解类，封装为BeanDefinition定义
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
 			for (BeanDefinition candidate : candidates) {
 				ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(candidate);
@@ -282,13 +284,18 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);
 				}
 				if (candidate instanceof AnnotatedBeanDefinition) {
+					// 解析类注解信息。比如：@Primary, @Lazy等，封装到BeanDefinition
 					AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);
 				}
 				if (checkCandidate(beanName, candidate)) {
+					// BeanDefinition的持有，同时持有的包括BeanDefinition的名称和别名
 					BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
 					definitionHolder =
 							AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
 					beanDefinitions.add(definitionHolder);
+					// 注册BeanDefinition。
+					//将BeanDefinition注册进DefaultListableBeanFactory.beanDefinitionMap
+					// 将beanName注册进DefaultListableBeanFactory.beanDefinitionNames
 					registerBeanDefinition(definitionHolder, this.registry);
 				}
 			}
