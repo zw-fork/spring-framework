@@ -54,6 +54,16 @@ import org.springframework.lang.Nullable;
  * @see DestructionAwareBeanPostProcessor
  * @see ConfigurableBeanFactory#addBeanPostProcessor
  * @see BeanFactoryPostProcessor
+ *
+ * BeanPostProcessor：Bean后置处理器，是对生成的Bean对象进行修改
+ *
+ * BeanPostProcessor能在spring容器实例化bean之后，在执行bean的初始化方法前后，添加一些自己的处理逻辑。初始化方法包括以下两种：
+ * 1、实现InitializingBean接口的bean，对应方法为afterPropertiesSet
+ * 2、xml定义中，通过init-method设置的方法
+ *
+ * BeanPostProcessor是BeanFactoryPostProcessor之后执行的
+ *
+ * 如果自定义了多个的BeanPostProcessor的实现类，通过实现Ordered接口，设置order属性，可以按照顺序执行实现类的方法
  */
 public interface BeanPostProcessor {
 

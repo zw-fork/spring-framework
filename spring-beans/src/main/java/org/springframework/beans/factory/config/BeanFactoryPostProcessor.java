@@ -58,11 +58,20 @@ import org.springframework.beans.BeansException;
  * @since 06.07.2003
  * @see BeanPostProcessor
  * @see PropertyResourceConfigurer
+ *
+ * BeanFactory后置处理器，是对BeanDefinition对象进行修改。（BeanDefinition：存储bean标签的信息，用来生成bean实例）
+ *
+ * BeanFactoryPostProcessor接口是针对bean容器的，它的实现类可以在当前BeanFactory初始化（spring容器加载bean定义文件）后，
+ * bean实例化之前修改bean的定义属性，达到影响之后实例化bean的效果。
+ * 也就是说，Spring允许BeanFactoryPostProcessor在容器实例化任何其它bean之前读取配置元数据，并可以根据需要进行修改，
+ * 例如可以把bean的scope从singleton改为prototype，也可以把property的值给修改掉。可以同时配置多个BeanFactoryPostProcessor，
+ * 并通过设置’order’属性来控制各个BeanFactoryPostProcessor的执行次序。
  */
 @FunctionalInterface
 public interface BeanFactoryPostProcessor {
 
 	/**
+	 * 可以通过beanFactory获取bean定义信息
 	 * Modify the application context's internal bean factory after its standard
 	 * initialization. All bean definitions will have been loaded, but no beans
 	 * will have been instantiated yet. This allows for overriding or adding
