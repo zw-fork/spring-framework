@@ -36,6 +36,8 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @author Rob Harrop
  * @since 3.0
+ *
+ * 解析配置文件中占位符的功能
  */
 public class PropertyPlaceholderHelper {
 

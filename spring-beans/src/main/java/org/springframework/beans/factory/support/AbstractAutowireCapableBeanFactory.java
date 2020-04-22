@@ -408,6 +408,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
+	 * bean初始化方法调用前被调用
 	 * 调用BeanPostProcessor后置处理器实例对象初始化之前的处理方法
 	 * @param existingBean the existing bean instance
 	 * @param beanName the name of the bean, to be passed to it if necessary
@@ -433,6 +434,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return result;
 	}
 
+	//bean初始化方法调用后被调用
 	@Override
 	public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
 			throws BeansException {
@@ -1875,13 +1877,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
+			//1. 初始化Bean前置处理
 			//调用我们的bean的后置处理器的postProcessorsBeforeInitialization方法，@PostCust注解方法
 			//生成代理对象
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
 		try {
-			// 调用初始化方法
+			//
+			//2. 调用初始化方法
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
 		catch (Throwable ex) {
@@ -1890,6 +1894,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					beanName, "Invocation of init method failed", ex);
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
+			// 3. 初始化Bean完成后的，后置处理
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 
@@ -1928,8 +1933,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected void invokeInitMethods(String beanName, final Object bean, @Nullable RootBeanDefinition mbd)
 			throws Throwable {
 
-		// 判断容器是否实现了InitializingBean接口
 		boolean isInitializingBean = (bean instanceof InitializingBean);
+		// 判断容器是否实现了InitializingBean接口，且存在afterPropertiesSet方法
 		if (isInitializingBean && (mbd == null || !mbd.isExternallyManagedInitMethod("afterPropertiesSet"))) {
 			if (logger.isTraceEnabled()) {
 				logger.trace("Invoking afterPropertiesSet() on bean with name '" + beanName + "'");
@@ -1946,6 +1951,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				}
 			}
 			else {
+				// 执行afterPropertiesSet()方法
 				((InitializingBean) bean).afterPropertiesSet();
 			}
 		}

@@ -533,7 +533,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
-			//3. 为BeanFactory配置容器特性，例如类加载器、事件处理器等
+			//3. 为BeanFactory配置容器特性，例如类加载器、事件处理器等。
 			prepareBeanFactory(beanFactory);
 
 			try {
@@ -546,6 +546,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// 获取配置类中@Bean方法，将其包装成beanDefinition，放入beanDefinitionMap类
 				//将BeanDefinition注册进DefaultListableBeanFactory.beanDefinitionMap
 				// 将beanName注册进DefaultListableBeanFactory.beanDefinitionNames
+				// TODO
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
@@ -723,6 +724,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Register default environment beans.
 		if (!beanFactory.containsLocalBean(ENVIRONMENT_BEAN_NAME)) {
+			// 将环境变量，注册为单例Bean
 			beanFactory.registerSingleton(ENVIRONMENT_BEAN_NAME, getEnvironment());
 		}
 		if (!beanFactory.containsLocalBean(SYSTEM_PROPERTIES_BEAN_NAME)) {

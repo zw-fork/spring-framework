@@ -38,6 +38,8 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 3.1
  * @see PropertySourcesPropertyResolver
+ *
+ * PropertySources的默认实现。存放PropertySource列表
  */
 public class MutablePropertySources implements PropertySources {
 

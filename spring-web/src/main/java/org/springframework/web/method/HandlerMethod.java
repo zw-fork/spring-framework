@@ -58,6 +58,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @author Juergen Hoeller
  * @author Sam Brannen
  * @since 3.1
+ *
+ *  HandlerMethod封装了很多属性，在访问请求方法的时候可以方便的访问到方法、方法参数、方法上的注解、所属类等并且对方法参数封装处理，
+ *  也可以方便的访问到方法参数的注解等信息
  */
 public class HandlerMethod {
 
@@ -71,8 +74,10 @@ public class HandlerMethod {
 
 	private final Class<?> beanType;
 
+	// 注册的方法
 	private final Method method;
 
+	// 被桥接的方法,如果method是原生的，这个属性的值就是metho
 	private final Method bridgedMethod;
 
 	private final MethodParameter[] parameters;

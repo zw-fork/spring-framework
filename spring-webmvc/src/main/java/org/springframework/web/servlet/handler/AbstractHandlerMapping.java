@@ -471,7 +471,9 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		String lookupPath = this.urlPathHelper.getLookupPathForRequest(request, LOOKUP_PATH);
 		for (HandlerInterceptor interceptor : this.adaptedInterceptors) {
 			if (interceptor instanceof MappedInterceptor) {
+				// 自定义HandlerInterceptor，会被委派给MappedInterceptor处理
 				MappedInterceptor mappedInterceptor = (MappedInterceptor) interceptor;
+				// 根据lookupPath，为HandlerMapping添加匹配的自定义拦截器
 				if (mappedInterceptor.matches(lookupPath, this.pathMatcher)) {
 					chain.addInterceptor(mappedInterceptor.getInterceptor());
 				}

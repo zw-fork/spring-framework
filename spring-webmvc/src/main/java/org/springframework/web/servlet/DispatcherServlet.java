@@ -1029,7 +1029,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				/*
 				2. 取得处理当前请求的controller，这里也称为Handler处理器，
 				这里并不是直接返回controller，而是返回的HandlerExecutionChain请求处理器链对象，
-				该对象封装了Handler和Interceptors.
+				该对象封装了Handler和Interceptors拦截器、HandlerMethod
 				 */
 				mappedHandler = getHandler(processedRequest);
 				// 如果Handler为空，返回404
@@ -1039,7 +1039,9 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				// Determine handler adapter for the current request.
-				// 3. 获取处理request的处理器Handler Adapter
+				// 3. 获取处理request的处理器Handler Adapter。根据Handler创建适配器
+				// 因为Handler格式是不固定的，所以在处理请求时需要HandlerAdapter做适配.
+				// 一般使用HttpRequestHandlerAdapter
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
@@ -1053,7 +1055,7 @@ public class DispatcherServlet extends FrameworkServlet {
 					}
 				}
 
-				// 前置拦截：判断请求是否被拦截器的preHandle()方法拦截
+				// 前置拦截HandlerInterceptor：判断请求是否被拦截器的preHandle()方法拦截
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
@@ -1068,7 +1070,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 				// 结果视图对象的处理
 				applyDefaultViewName(processedRequest, mv);
-				// 后置拦截处理：判断请求是否被postHandle()方法拦截处理
+				// 后置拦截处理HandlerInterceptor：判断请求是否被postHandle()方法拦截处理
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
@@ -1257,6 +1259,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	@Nullable
 	protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
 		if (this.handlerMappings != null) {
+			// requestMappingHandlerMapping
 			for (HandlerMapping mapping : this.handlerMappings) {
 				HandlerExecutionChain handler = mapping.getHandler(request);
 				if (handler != null) {
@@ -1294,6 +1297,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
 		if (this.handlerAdapters != null) {
 			for (HandlerAdapter adapter : this.handlerAdapters) {
+				// 一般HttpRequestHandlerAdapter返回true
 				if (adapter.supports(handler)) {
 					return adapter;
 				}

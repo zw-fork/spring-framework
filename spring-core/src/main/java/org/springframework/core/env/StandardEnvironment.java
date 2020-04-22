@@ -75,8 +75,10 @@ public class StandardEnvironment extends AbstractEnvironment {
 	 */
 	@Override
 	protected void customizePropertySources(MutablePropertySources propertySources) {
+		// System.getProperties().获取系统相关属性，比如：Java版本、操作系统信息、用户名等，这些跟jvm和操作系统相关属性
 		propertySources.addLast(
 				new PropertiesPropertySource(SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, getSystemProperties()));
+		// System.getenv(). 在windows中‘系统属性’->‘高级’->‘环境变量’；
 		propertySources.addLast(
 				new SystemEnvironmentPropertySource(SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, getSystemEnvironment()));
 	}

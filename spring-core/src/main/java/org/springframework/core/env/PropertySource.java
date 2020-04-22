@@ -56,13 +56,21 @@ import org.springframework.util.ObjectUtils;
  * @see PropertySourcesPropertyResolver
  * @see MutablePropertySources
  * @see org.springframework.context.annotation.PropertySource
+ *
+ * PropertySource是一个抽象类，它包含一个source和一个name。source可以是map或其他，通常是一组键值对
  */
 public abstract class PropertySource<T> {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	/**
+	 * 属性源名称
+	 */
 	protected final String name;
 
+	/**
+	 * 属性源（比如来自Map，那就是一个Map对象）
+	 */
 	protected final T source;
 
 

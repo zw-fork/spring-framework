@@ -180,7 +180,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * @see #register(Class...)
 	 * @see #refresh()
 	 *
-	 * 扫描指定包路径及其子包下的注解类，为了使新添加的类被处理，必须手动调用refresh()方法刷新容器
+	 * 扫描指定包路径及其子包下的注解类，获取BeanDefinition，为了使新添加的类被处理，必须手动调用refresh()方法刷新容器
 	 */
 	@Override
 	public void scan(String... basePackages) {

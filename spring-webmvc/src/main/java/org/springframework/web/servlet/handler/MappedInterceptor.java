@@ -41,6 +41,8 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Rossen Stoyanchev
  * @author Brian Clozel
  * @since 3.0
+ *
+ * 该类继承自HandlerInterceptor，自定义的HandlerInterceptor会委派给该类处理
  */
 public final class MappedInterceptor implements HandlerInterceptor {
 
@@ -50,6 +52,9 @@ public final class MappedInterceptor implements HandlerInterceptor {
 	@Nullable
 	private final String[] excludePatterns;
 
+	/**
+	 * 自定义的HandlerInterceptor
+	 */
 	private final HandlerInterceptor interceptor;
 
 	@Nullable

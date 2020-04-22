@@ -95,6 +95,14 @@ import org.springframework.core.env.Profiles;
  * @see AbstractEnvironment#DEFAULT_PROFILES_PROPERTY_NAME
  * @see Conditional
  * @see org.springframework.test.context.ActiveProfiles
+ *
+ * 在日常的开发工作中，我们经常需要将程序部署到不同的环境，
+ * 比如Dev开发环境，QA测试环境，Prod生产环境，这些环境下的一些配置肯定是不一样的，比如数据库配置，Redis配置，RabbitMQ配置。
+ *
+ * 如果每次切换发布环境，都需要修改配置重新构建的话，那对程序员来说将是噩梦，针对这种场景，
+ * Spring提供了@Profile注解来实现按照不同的环境装配不同的bean，进而实现程序只需构建一次，但可以部署到多个环境。
+ *
+ * @ Profile("prod")
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

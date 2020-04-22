@@ -40,6 +40,13 @@ import org.springframework.web.method.HandlerMethod;
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
  * @since 3.1
+ *
+ * InvocableHandlerMethod是对HandlerMethod的扩展，基于一组HandlerMethodArgumentResolver从请求上下文中解析出控制器方法的参数值，然后调用控制器方法。
+ *
+ * 除此之外,InvocableHandlerMethod和HandlerMethod的不同在于:
+ *
+ * HandlerMethod被容器在启动过程中搜集控制器方法阶段用于记录每个控制器方法，
+ * 而InvocableHandlerMethod用于在某个请求被控制器方法处理时，包装处理所需的各种参数和执行处理逻辑。
  */
 public class InvocableHandlerMethod extends HandlerMethod {
 

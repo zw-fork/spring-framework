@@ -28,6 +28,12 @@ import org.springframework.lang.Nullable;
  * @see PropertySource
  * @see PropertySources
  * @see AbstractEnvironment
+ *
+ * 用来将PropertySource的占位符文本解析，PropertyResolver是 Environment的顶层接口，主要提供属性检索和解析带占位符的文本
+ *
+ * PropertySources+PropertyPlaceholderHelper的结合,
+ *
+ * 即PropertySources是数据源,PropertyPlaceholderHelper具备解析占位符的功能
  */
 public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 
@@ -74,6 +80,14 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 		return getProperty(key, String.class, false);
 	}
 
+	/**
+	 * 数据转化为指定class对象数据
+	 * @param key
+	 * @param targetValueType
+	 * @param resolveNestedPlaceholders
+	 * @param <T>
+	 * @return
+	 */
 	@Nullable
 	protected <T> T getProperty(String key, Class<T> targetValueType, boolean resolveNestedPlaceholders) {
 		if (this.propertySources != null) {

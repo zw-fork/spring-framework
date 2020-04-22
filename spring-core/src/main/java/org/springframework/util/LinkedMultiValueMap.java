@@ -38,6 +38,7 @@ import org.springframework.lang.Nullable;
  * @since 3.0
  * @param <K> the key type
  * @param <V> the value element type
+ *       key为字符串；value为LinkedList
  */
 public class LinkedMultiValueMap<K, V> implements MultiValueMap<K, V>, Serializable, Cloneable {
 

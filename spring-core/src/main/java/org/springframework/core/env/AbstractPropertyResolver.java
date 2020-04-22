@@ -243,6 +243,7 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	 * @return the converted value, or the original value if no conversion
 	 * is necessary
 	 * @since 4.3.5
+	 * 进行类型转换
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
@@ -250,6 +251,7 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 		if (targetType == null) {
 			return (T) value;
 		}
+		//自定义类型转换
 		ConversionService conversionServiceToUse = this.conversionService;
 		if (conversionServiceToUse == null) {
 			// Avoid initialization of shared DefaultConversionService if
@@ -257,6 +259,7 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 			if (ClassUtils.isAssignableValue(targetType, value)) {
 				return (T) value;
 			}
+			//默认类型转换器
 			conversionServiceToUse = DefaultConversionService.getSharedInstance();
 		}
 		return conversionServiceToUse.convert(value, targetType);

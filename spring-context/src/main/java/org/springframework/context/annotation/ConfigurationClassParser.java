@@ -511,9 +511,10 @@ class ConfigurationClassParser {
 		this.propertySourceNames.add(name);
 	}
 
-
 	/**
 	 * Returns {@code @Import} class, considering all meta-annotations.
+	 * 获取所有标注在@Import中的类。
+	 * 比如：EnableAutoConfiguration类中的@Import(AutoConfigurationImportSelector.class)，即AutoConfigurationImportSelector
 	 */
 	private Set<SourceClass> getImports(SourceClass sourceClass) throws IOException {
 		Set<SourceClass> imports = new LinkedHashSet<>();
@@ -564,6 +565,7 @@ class ConfigurationClassParser {
 			this.importStack.push(configClass);
 			try {
 				for (SourceClass candidate : importCandidates) {
+					// 如果@Import注解中的类，实现了ImportSelector接口
 					if (candidate.isAssignable(ImportSelector.class)) {
 						// Candidate class is an ImportSelector -> delegate to it to determine imports
 						Class<?> candidateClass = candidate.loadClass();
@@ -581,7 +583,7 @@ class ConfigurationClassParser {
 							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames, exclusionFilter);
 							processImports(configClass, currentSourceClass, importSourceClasses, exclusionFilter, false);
 						}
-					}
+					} // 如果@Import注解中的类，实现了ImportBeanDefinitionRegistrar接口
 					else if (candidate.isAssignable(ImportBeanDefinitionRegistrar.class)) {
 						// Candidate class is an ImportBeanDefinitionRegistrar ->
 						// delegate to it to register additional bean definitions

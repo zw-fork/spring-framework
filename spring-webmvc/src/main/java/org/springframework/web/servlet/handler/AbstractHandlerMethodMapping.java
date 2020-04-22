@@ -533,6 +533,8 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 		private final Map<T, HandlerMethod> mappingLookup = new LinkedHashMap<>();
 
+		//保存url和@Mapping之间的关系。value为list，保存了url对应的所有的Mapping(包括GET或POST等)。
+		//list中值为RequestMappingInfo对象
 		private final MultiValueMap<String, T> urlLookup = new LinkedMultiValueMap<>();
 
 		private final Map<String, List<HandlerMethod>> nameLookup = new ConcurrentHashMap<>();

@@ -32,6 +32,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionManager;
 
 /**
+ * 继承类TransactionAspectSupport：其实对其进行了增强（模板方法模式）
+ * 实现接口MethodInterceptor：方法拦截器，执行代理类的目标方法，会触发invoke方法执行
  * AOP Alliance MethodInterceptor for declarative transaction
  * management using the common Spring transaction infrastructure
  * ({@link org.springframework.transaction.PlatformTransactionManager}/
@@ -40,7 +42,7 @@ import org.springframework.transaction.TransactionManager;
  * <p>Derives from the {@link TransactionAspectSupport} class which
  * contains the integration with Spring's underlying transaction API.
  * TransactionInterceptor simply calls the relevant superclass methods
- * such as {@link #invokeWithinTransaction} in the correct order.
+ * such as {@link #invokeWjithinTransaction} in the correct order.
  *
  * <p>TransactionInterceptors are thread-safe.
  *
