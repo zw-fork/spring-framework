@@ -27,6 +27,8 @@ import org.springframework.core.annotation.AliasFor;
 import org.springframework.transaction.TransactionDefinition;
 
 /**
+ * 不带任何属性的 @Transactional 注解意味着事务传播是必需的，隔离是默认的，超时是默认的，模式是可读写的
+ *
  * Describes a transaction attribute on an individual method or on a class.
  *
  * <p>At the class level, this annotation applies as a default to all methods of
@@ -82,6 +84,8 @@ public @interface Transactional {
 	String transactionManager() default "";
 
 	/**
+	 * 7种传播行为
+	 *
 	 * The transaction propagation type.
 	 * <p>Defaults to {@link Propagation#REQUIRED}.
 	 * @see org.springframework.transaction.interceptor.TransactionAttribute#getPropagationBehavior()
@@ -89,6 +93,8 @@ public @interface Transactional {
 	Propagation propagation() default Propagation.REQUIRED;
 
 	/**
+	 * isolation属性是用来设置事务的隔离级别，数据库有四种隔离级别：读未提交、读已提交、可重复读、可串行化。MySQL的默认隔离级别是可重复读。
+	 *
 	 * The transaction isolation level.
 	 * <p>Defaults to {@link Isolation#DEFAULT}.
 	 * <p>Exclusively designed for use with {@link Propagation#REQUIRED} or
@@ -103,6 +109,9 @@ public @interface Transactional {
 	Isolation isolation() default Isolation.DEFAULT;
 
 	/**
+	 * timtout是用来设置事务的超时时间，可以看到默认为-1，不会超时。
+	 *
+	 *
 	 * The timeout for this transaction (in seconds).
 	 * <p>Defaults to the default timeout of the underlying transaction system.
 	 * <p>Exclusively designed for use with {@link Propagation#REQUIRED} or
@@ -113,6 +122,15 @@ public @interface Transactional {
 	int timeout() default TransactionDefinition.TIMEOUT_DEFAULT;
 
 	/**
+	 *
+	 * 那为什么要设置只读事务呢？它的好处是什么？可以看出它的作用是保持整个事务的数据一致性，
+	 * 如果事务中有多次查询，不会出现数据不一致的情况。所以在一个事务中如果有多次查询，可以启用只读事务，
+	 * 如果只有一次查询就无需只读事务了。
+	 *
+	 * ​	另外，使用了只读事务，数据库会提供一些优化。
+	 *
+	 * ​	但要注意的是，只读事务中只能有读操作，不能含有写操作，否则会报错。
+	 *
 	 * A boolean flag that can be set to {@code true} if the transaction is
 	 * effectively read-only, allowing for corresponding optimizations at runtime.
 	 * <p>Defaults to {@code false}.
@@ -127,6 +145,8 @@ public @interface Transactional {
 	boolean readOnly() default false;
 
 	/**
+	 * 事务回滚的异常类
+	 *
 	 * Defines zero (0) or more exception {@link Class classes}, which must be
 	 * subclasses of {@link Throwable}, indicating which exception types must cause
 	 * a transaction rollback.
@@ -143,6 +163,8 @@ public @interface Transactional {
 	Class<? extends Throwable>[] rollbackFor() default {};
 
 	/**
+	 * 事务将回滚的异常类名称
+	 *
 	 * Defines zero (0) or more exception names (for exceptions which must be a
 	 * subclass of {@link Throwable}), indicating which exception types must cause
 	 * a transaction rollback.
@@ -163,6 +185,8 @@ public @interface Transactional {
 	String[] rollbackForClassName() default {};
 
 	/**
+	 * 事务部会回滚的异常类
+	 *
 	 * Defines zero (0) or more exception {@link Class Classes}, which must be
 	 * subclasses of {@link Throwable}, indicating which exception types must
 	 * <b>not</b> cause a transaction rollback.

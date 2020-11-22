@@ -19,6 +19,8 @@ package org.springframework.transaction;
 import java.io.Flushable;
 
 /**
+ * 允许事务管理器控制事务的执行。这些代码可以检查事务是新事务还是只读事务，并且可以启动回滚。
+ *
  * Representation of the status of a transaction.
  *
  * <p>Transactional code can use this to retrieve status information,

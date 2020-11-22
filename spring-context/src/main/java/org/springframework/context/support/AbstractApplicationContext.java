@@ -515,6 +515,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 * 对容器进行重启、刷新、重置
 	 * 12步功能
 	 * @throws BeansException
 	 * @throws IllegalStateException
@@ -529,7 +530,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// Tell the subclass to refresh the internal bean factory.
 			//2. 告诉子类启动refreshBeanFactory()方法，Bean定义资源文件的载入从子类的refreshBeanFactory()方法启动
 			// 容器开始启动
-			// 创建BeanFactory；解析数据，创建BeanDefinition，并使用BeanDefinitionReaderUtils类，将其放入beanDefinitionMap保存的IOC容器
+			// 获取BeanFactory（DefaultListableBeanFactory）；解析数据，创建BeanDefinition，并使用BeanDefinitionReaderUtils类，将其放入beanDefinitionMap保存的IOC容器
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -539,6 +540,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
 				//4. 为容器的某些子类指定特殊的BeanPost事件处理器。 // 由子类继承去实现该类，当前该方法为空
+				// 自己实现BeanPostProcessor
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
@@ -546,6 +548,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// 获取配置类中@Bean方法，将其包装成beanDefinition，放入beanDefinitionMap类
 				//将BeanDefinition注册进DefaultListableBeanFactory.beanDefinitionMap
 				// 将beanName注册进DefaultListableBeanFactory.beanDefinitionNames
+				//执行BeanFactoryPostProcessor.postProcessBeanFactory
+				//创建BeanFactory后置处理器Bean，并执行postProcessBeanFactory()方法，对Bean定义进行修改。
+				// 自己实现BeanFactoryPostProcessor
 				// TODO
 				invokeBeanFactoryPostProcessors(beanFactory);
 
@@ -558,7 +563,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
-				//8. 初始化容器事件传播器
+				//8. 初始化容器 事件传播器
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
@@ -681,6 +686,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
 		// 使用了委派模式，父类定义了抽象的refreshBeanFactory()方法，具体实现调用子类容器的refreshBeanFactory()
+		// 使用ClassPathXmlApplicationContext时，该方法会注册BeanDefinition
 		refreshBeanFactory();
 		return getBeanFactory();
 	}
@@ -751,6 +757,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+		//创建BeanFactory后置处理器Bean，并执行postProcessBeanFactory()方法，对Bean定义进行修改。
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime

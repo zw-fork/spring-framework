@@ -528,9 +528,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
 			/**
+			 * 调用对象实例化之前的前置处理器InstantiationAwareBeanPostProcessor.postProcessBeforeInstantiation.
+			 * resolveBeforeInstantiation方法一般返回null，即不实例化Bean对象
+			 *
 			 * 通过bean后置处理器来进行后置处理生成代理对象，一般情况下在此处不会生成代理对象。
 			 * 为什么不能生成代理对象？因为真实的对象还没有生成，所以在这里不会生成代理对象，
 			 * 那么在这一步是我们aop和事务的关键，因为在这里解析我们的aop切面信息进行缓存
+			 *
 			 */
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
@@ -1847,6 +1851,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 
 	/**
+	 * 初始化Bean步骤：
+	 * 	1. 若bean实现了XXXAware接口，先执行对应方法
+	 * 	2. 调用Bean后置处理器，执行postProcessorsBeforeInitialization方法
+	 * 	3. 若bean实现了InitializingBean，则执行afterPropertiesSet()
+	 * 	4. 调用Bean后置处理器，执行postProcessAfterInitialization方法
+	 *
+	 *
 	 * Initialize the given bean instance, applying factory callbacks
 	 * as well as init methods and bean post processors.
 	 * <p>Called from {@link #createBean} for traditionally defined beans,
@@ -1878,7 +1889,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
 			//1. 初始化Bean前置处理
-			//调用我们的bean的后置处理器的postProcessorsBeforeInitialization方法，@PostCust注解方法
+			//调用我们的bean的后置处理器的BeanPostProcessor.postProcessorsBeforeInitialization方法，@PostCust注解方法
 			//生成代理对象
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}

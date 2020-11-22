@@ -44,9 +44,9 @@ import org.springframework.lang.Nullable;
  * 主要定义了有哪些事务属性可以指定：
  *
  *
- * □事务的传播行为(Propagation Behavior)
+ * □事务的传播行为(Propagation Behavior)：7种传播行为
  *
- * □事务的隔离(Isolation)级别
+ * □事务的隔离(Isolation)级别：4种隔离级别 + 默认隔离级别
  *
  * □事务的超时时间(Timeout)
  *
@@ -56,6 +56,7 @@ import org.springframework.lang.Nullable;
 public interface TransactionDefinition {
 
 	/**
+	 * 支持一个已经存在的事务。如果不存在，则开启一个新的事务
 	 * Support a current transaction; create a new one if none exists.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p>This is typically the default setting of a transaction definition,
@@ -64,6 +65,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_REQUIRED = 0;
 
 	/**
+	 * 支持一个已经存在的事务。如果不存在，则以非事务方式执行
 	 * Support a current transaction; execute non-transactionally if none exists.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p><b>NOTE:</b> For transaction managers with transaction synchronization,
@@ -85,6 +87,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_SUPPORTS = 1;
 
 	/**
+	 * 支持一个已经存在的事务。如果没有，则抛出异常
 	 * Support a current transaction; throw an exception if no current transaction
 	 * exists. Analogous to the EJB transaction attribute of the same name.
 	 * <p>Note that transaction synchronization within a {@code PROPAGATION_MANDATORY}
@@ -93,6 +96,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_MANDATORY = 2;
 
 	/**
+	 * 始终开始新的事务。如果活动事务己经存在，将其暂停
 	 * Create a new transaction, suspending the current transaction if one exists.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p><b>NOTE:</b> Actual transaction suspension will not work out-of-the-box
@@ -108,6 +112,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_REQUIRES_NEW = 3;
 
 	/**
+	 * 不支持活动事务的执行。始终以非事务方式执行并暂停任何现有事务
 	 * Do not support a current transaction; rather always execute non-transactionally.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p><b>NOTE:</b> Actual transaction suspension will not work out-of-the-box
@@ -123,6 +128,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_NOT_SUPPORTED = 4;
 
 	/**
+	 * 即使存在活动事务，也始终以非事务方式执行。如果存在活动事务， 则抛出异常
 	 * Do not support a current transaction; throw an exception if a current transaction
 	 * exists. Analogous to the EJB transaction attribute of the same name.
 	 * <p>Note that transaction synchronization is <i>not</i> available within a
@@ -131,6 +137,8 @@ public interface TransactionDefinition {
 	int PROPAGATION_NEVER = 5;
 
 	/**
+	 * 如果存在活动事务，则在嵌套事务中运行。如果没有活动事务，则与PROPAGATION_REQUIRED 相同
+	 *
 	 * Execute within a nested transaction if a current transaction exists,
 	 * behave like {@link #PROPAGATION_REQUIRED} otherwise. There is no
 	 * analogous feature in EJB.
@@ -145,11 +153,14 @@ public interface TransactionDefinition {
 
 
 	/**
+	 * 事务的五种隔离级别：
+	 */
+	/**
 	 * Use the default isolation level of the underlying datastore.
 	 * All other levels correspond to the JDBC isolation levels.
 	 * @see java.sql.Connection
 	 */
-	int ISOLATION_DEFAULT = -1;
+	int ISOLATION_DEFAULT = -1;     // 默认隔离级别。使用底层数据存储的默认隔离级别。MySQL的默认隔离级别是REPEATABLE-READ
 
 	/**
 	 * Indicates that dirty reads, non-repeatable reads and phantom reads
@@ -160,7 +171,7 @@ public interface TransactionDefinition {
 	 * retrieved an invalid row.
 	 * @see java.sql.Connection#TRANSACTION_READ_UNCOMMITTED
 	 */
-	int ISOLATION_READ_UNCOMMITTED = 1;  // same as java.sql.Connection.TRANSACTION_READ_UNCOMMITTED;
+	int ISOLATION_READ_UNCOMMITTED = 1;  // same as java.sql.Connection.TRANSACTION_READ_UNCOMMITTED;   未提交读：事务未提交的数据对其他事务也是可见的，会出现脏读
 
 	/**
 	 * Indicates that dirty reads are prevented; non-repeatable reads and
@@ -169,7 +180,7 @@ public interface TransactionDefinition {
 	 * with uncommitted changes in it.
 	 * @see java.sql.Connection#TRANSACTION_READ_COMMITTED
 	 */
-	int ISOLATION_READ_COMMITTED = 2;  // same as java.sql.Connection.TRANSACTION_READ_COMMITTED;
+	int ISOLATION_READ_COMMITTED = 2;  // same as java.sql.Connection.TRANSACTION_READ_COMMITTED;    已提交读：一个事务开始之后，只能看到已提交的事务所做的修改，会出现不可重复读
 
 	/**
 	 * Indicates that dirty reads and non-repeatable reads are prevented;
@@ -180,7 +191,7 @@ public interface TransactionDefinition {
 	 * getting different values the second time (a "non-repeatable read").
 	 * @see java.sql.Connection#TRANSACTION_REPEATABLE_READ
 	 */
-	int ISOLATION_REPEATABLE_READ = 4;  // same as java.sql.Connection.TRANSACTION_REPEATABLE_READ;
+	int ISOLATION_REPEATABLE_READ = 4;  // same as java.sql.Connection.TRANSACTION_REPEATABLE_READ;    可重复读：在同一个事务中多次读取相同的数据结果是一样的，这种隔离级别在InnoDB中不会产生幻读，通过间歇锁解决
 
 	/**
 	 * Indicates that dirty reads, non-repeatable reads and phantom reads
@@ -193,7 +204,10 @@ public interface TransactionDefinition {
 	 * in the second read.
 	 * @see java.sql.Connection#TRANSACTION_SERIALIZABLE
 	 */
-	int ISOLATION_SERIALIZABLE = 8;  // same as java.sql.Connection.TRANSACTION_SERIALIZABLE;
+	int ISOLATION_SERIALIZABLE = 8;  // same as java.sql.Connection.TRANSACTION_SERIALIZABLE;    串行化
+
+
+
 
 
 	/**
@@ -213,7 +227,7 @@ public interface TransactionDefinition {
 	 * @see org.springframework.transaction.support.TransactionSynchronizationManager#isActualTransactionActive()
 	 */
 	default int getPropagationBehavior() {
-		return PROPAGATION_REQUIRED;
+		return PROPAGATION_REQUIRED;    // 返回事务的传播行为
 	}
 
 	/**
@@ -235,7 +249,7 @@ public interface TransactionDefinition {
 	 * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#setValidateExistingTransaction
 	 */
 	default int getIsolationLevel() {
-		return ISOLATION_DEFAULT;
+		return ISOLATION_DEFAULT;   // 返回事务的隔离级别，事务管理器根据它来控制另外一个事务可以看到本事务内的哪些数据
 	}
 
 	/**
@@ -250,7 +264,7 @@ public interface TransactionDefinition {
 	 * @return the transaction timeout
 	 */
 	default int getTimeout() {
-		return TIMEOUT_DEFAULT;
+		return TIMEOUT_DEFAULT;			// 返回事务必须在多少秒内完成
 	}
 
 	/**
@@ -271,7 +285,7 @@ public interface TransactionDefinition {
 	 * @see org.springframework.transaction.support.TransactionSynchronizationManager#isCurrentTransactionReadOnly()
 	 */
 	default boolean isReadOnly() {
-		return false;
+		return false;			// 事务是否只读，事务管理器能够根据这个返回值进行优化，确保事务是只读的
 	}
 
 	/**

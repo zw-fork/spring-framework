@@ -179,6 +179,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					if (delegate.isDefaultNamespace(ele)) {
+						// 解析xml
 						parseDefaultElement(ele, delegate);
 					}
 					else {
@@ -205,7 +206,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			processAliasRegistration(ele);
 		}
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {		//bean节点解析
-			// 解析xml文件中的bean，并把生成的BeanDefinition注册到IOC容器
+			// 解析xml文件中的bean元素，并把生成的BeanDefinition注册到IOC容器
 			processBeanDefinition(ele, delegate);
 		}
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {

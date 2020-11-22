@@ -17,6 +17,10 @@
 package org.springframework.beans.factory;
 
 /**
+ * aware,翻译过来是知道的，已感知的，意识到的，所以这些接口从字面意思应该是能感知到所有Aware前面的含义。
+ *
+ * 先举个BeanNameAware的例子，实现BeanNameAware接口，可以让该Bean感知到自身的BeanName（对应Spring容器的BeanId属性）属性
+ *
  * A marker superinterface indicating that a bean is eligible to be notified by the
  * Spring container of a particular framework object through a callback-style method.
  * The actual method signature is determined by individual subinterfaces but should

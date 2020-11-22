@@ -23,7 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import org.springframework.util.Assert;
 
 /**
  * Reflective wrapper around a WebLogic 10 class loader. Used to
@@ -80,7 +79,6 @@ class WebLogicClassLoaderAdapter {
 
 
 	public void addTransformer(ClassFileTransformer transformer) {
-		Assert.notNull(transformer, "ClassFileTransformer must not be null");
 		try {
 			InvocationHandler adapter = new WebLogicClassPreProcessorAdapter(transformer, this.classLoader);
 			Object adapterInstance = Proxy.newProxyInstance(this.wlPreProcessorClass.getClassLoader(),

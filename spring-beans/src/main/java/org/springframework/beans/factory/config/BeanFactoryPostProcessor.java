@@ -68,10 +68,10 @@ import org.springframework.beans.BeansException;
  * 并通过设置’order’属性来控制各个BeanFactoryPostProcessor的执行次序。
  */
 @FunctionalInterface
-public interface BeanFactoryPostProcessor {
+public interface   BeanFactoryPostProcessor {
 
 	/**
-	 * 可以通过beanFactory获取bean定义信息
+	 * 可以通过beanFactory获取bean定义信息。修改Bean定义信息等操作
 	 * Modify the application context's internal bean factory after its standard
 	 * initialization. All bean definitions will have been loaded, but no beans
 	 * will have been instantiated yet. This allows for overriding or adding

@@ -61,6 +61,8 @@ import org.springframework.lang.Nullable;
  * 1、实现InitializingBean接口的bean，对应方法为afterPropertiesSet
  * 2、xml定义中，通过init-method设置的方法
  *
+ *  即该类方法在上面两个方法前后执行。
+ *
  * BeanPostProcessor是BeanFactoryPostProcessor之后执行的
  *
  * 如果自定义了多个的BeanPostProcessor的实现类，通过实现Ordered接口，设置order属性，可以按照顺序执行实现类的方法
@@ -68,7 +70,7 @@ import org.springframework.lang.Nullable;
 public interface BeanPostProcessor {
 
 	/**
-	 * bean初始化方法调用前被调用
+	 * bean初始化方法调用前被调用。即在afterPropertiesSet和init-method之前执行。
 	 * Apply this {@code BeanPostProcessor} to the given new bean instance <i>before</i> any bean
 	 * initialization callbacks (like InitializingBean's {@code afterPropertiesSet}
 	 * or a custom init-method). The bean will already be populated with property values.
@@ -87,7 +89,7 @@ public interface BeanPostProcessor {
 	}
 
 	/**
-	 * bean初始化方法调用后被调用
+	 * bean初始化方法调用后被调用。即在afterPropertiesSet和init-method之后执行。
 	 * Apply this {@code BeanPostProcessor} to the given new bean instance <i>after</i> any bean
 	 * initialization callbacks (like InitializingBean's {@code afterPropertiesSet}
 	 * or a custom init-method). The bean will already be populated with property values.
