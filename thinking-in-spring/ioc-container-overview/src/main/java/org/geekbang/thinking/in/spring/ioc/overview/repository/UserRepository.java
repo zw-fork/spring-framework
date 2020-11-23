@@ -20,6 +20,7 @@ import org.geekbang.thinking.in.spring.ioc.overview.domain.User;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 
 import java.util.Collection;
 
@@ -31,11 +32,22 @@ import java.util.Collection;
  */
 public class UserRepository {
 
-    private Collection<User> users; // 自定义 Bean
+    //依赖来源一：用户自定义的Bean。如：User对象
+    private Collection<User> users; // 自定义 Bean，实时注入
 
-    private BeanFactory beanFactory; // 內建非 Bean 对象（依赖）
+    // 依赖来源二：容器內建依赖。如：ObjectFactory、BeanFactory
+    private BeanFactory beanFactory; // 內建非 Bean 对象（依赖），实时注入
 
+    // 通过延迟注入ApplicationContext
+    //ObjectFactory.getObject() -> ApplicationContext
     private ObjectFactory<ApplicationContext> objectFactory;
+
+    // 通过延迟注入User
+    //ObjectFactory.getObject() -> User
+    private ObjectFactory<User> userObjectFactory;
+
+    // 依赖来源三：容器内建的Bean。比如：Environment
+    private Environment environment;
 
     public Collection<User> getUsers() {
         return users;
@@ -60,5 +72,23 @@ public class UserRepository {
 
     public void setObjectFactory(ObjectFactory<ApplicationContext> objectFactory) {
         this.objectFactory = objectFactory;
+    }
+
+    public void setUserObjectFactory(ObjectFactory<User> userObjectFactory)
+    {
+        this.userObjectFactory = userObjectFactory;
+    }
+
+    public ObjectFactory<User> getUserObjectFactory()
+    {
+        return userObjectFactory;
+    }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
     }
 }
