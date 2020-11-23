@@ -7,9 +7,9 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
+public class LifeCylceBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
-    public MyBeanFactoryPostProcessor() {
+    public LifeCylceBeanFactoryPostProcessor() {
         super();
         System.out.println("BeanFactoryPostProcessor->BeanFactory后置处理器创建完成！！");
     }

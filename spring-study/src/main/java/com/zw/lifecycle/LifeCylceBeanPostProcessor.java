@@ -5,9 +5,9 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyBeanPostProcessor implements BeanPostProcessor {
+public class LifeCylceBeanPostProcessor implements BeanPostProcessor {
 
-    public MyBeanPostProcessor() {
+    public LifeCylceBeanPostProcessor() {
         super();
         System.out.println("BeanPostProcessor -> Bean后置处理器创建完成！！");
         // TODO Auto-generated constructor stub
