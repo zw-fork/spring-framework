@@ -10,14 +10,20 @@ repositories {
 }
 
 dependencies {
+    compile(project(":spring-context"))
+    compile(project(":spring-beans"))
+    compile(project(":thinking-in-spring:ioc-container-overview"))
     testCompile group: 'junit', name: 'junit', version: '4.12'
+
 }
 
-task "create-dirs" << {
-    sourceSets*.java.srcDirs*.each {
-        it.mkdirs()
-    }
-    sourcScts*.resources.srcDirs*.each{
-        it.midirs()
+task 'create-dirs' {
+    doLast {
+        sourceSets*.java.srcDirs*.each {
+            it.mkdirs()
+        }
+        sourceSets*.resources.srcDirs*.each {
+            it.mkdirs()
+        }
     }
 }

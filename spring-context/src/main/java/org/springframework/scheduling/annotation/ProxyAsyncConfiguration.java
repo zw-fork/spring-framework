@@ -18,6 +18,8 @@ package org.springframework.scheduling.annotation;
 
 import java.lang.annotation.Annotation;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +43,9 @@ import org.springframework.util.Assert;
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class ProxyAsyncConfiguration extends AbstractAsyncConfiguration {
 
+	private static final Log logger = LogFactory.getLog(ProxyAsyncConfiguration.class);
+
+
 	@Bean(name = TaskManagementConfigUtils.ASYNC_ANNOTATION_PROCESSOR_BEAN_NAME)
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 	public AsyncAnnotationBeanPostProcessor asyncAdvisor() {
@@ -53,6 +58,7 @@ public class ProxyAsyncConfiguration extends AbstractAsyncConfiguration {
 		}
 		bpp.setProxyTargetClass(this.enableAsync.getBoolean("proxyTargetClass"));
 		bpp.setOrder(this.enableAsync.<Integer>getNumber("order"));
+		logger.info("create AsyncAnnotationBeanPostProcessor");
 		return bpp;
 	}
 

@@ -65,6 +65,8 @@ import org.springframework.transaction.TransactionDefinition;
 public @interface Transactional {
 
 	/**
+	 * 事务名称：用户可手动指定事务的名称，当多个事务的时候，可区分使用哪个事务。对应注解中的属性value、transactionManager
+	 *
 	 * Alias for {@link #transactionManager}.
 	 * @see #transactionManager
 	 */
@@ -185,7 +187,7 @@ public @interface Transactional {
 	String[] rollbackForClassName() default {};
 
 	/**
-	 * 事务部会回滚的异常类
+	 * 事务不会回滚的异常类
 	 *
 	 * Defines zero (0) or more exception {@link Class Classes}, which must be
 	 * subclasses of {@link Throwable}, indicating which exception types must

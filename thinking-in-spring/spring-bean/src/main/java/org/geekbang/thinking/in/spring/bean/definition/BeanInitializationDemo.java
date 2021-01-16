@@ -32,6 +32,11 @@ import org.springframework.context.annotation.Lazy;
 @Configuration // Configuration Class
 public class BeanInitializationDemo {
 
+	public BeanInitializationDemo()
+	{
+		System.out.println("调用构造方法，实例化BeanInitializationDemo对象.....");
+	}
+
     public static void main(String[] args) {
         // 创建 BeanFactory 容器
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
@@ -39,9 +44,11 @@ public class BeanInitializationDemo {
         applicationContext.register(BeanInitializationDemo.class);
         // 启动 Spring 应用上下文
         applicationContext.refresh();
-        // 非延迟初始化在 Spring 应用上下文启动完成后，被初始化
+        System.out.println("-------------");
+        // 非延迟初始化在 Spring 应用上下文启动完成后，被初始化。即，refresh()将实例化Bean。延迟加载在第一次getBean()时，进行初始化
+
         System.out.println("Spring 应用上下文已启动...");
-        // 依赖查找 UserFactory
+        // 依赖查找 UserFactory.  @Lazy，使Bean初始化发生在getBean()方法调用时
         UserFactory userFactory = applicationContext.getBean(UserFactory.class);
         System.out.println(userFactory);
         System.out.println("Spring 应用上下文准备关闭...");
@@ -51,7 +58,8 @@ public class BeanInitializationDemo {
     }
 
     @Bean(initMethod = "initUserFactory", destroyMethod = "doDestroy")
-    @Lazy(value = false)
+    @Lazy(value = true)
+    //@Lazy(value = true)
     public UserFactory userFactory() {
         return new DefaultUserFactory();
     }

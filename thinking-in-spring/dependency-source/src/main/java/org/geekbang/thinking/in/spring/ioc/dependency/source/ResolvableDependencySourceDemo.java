@@ -48,7 +48,7 @@ public class ResolvableDependencySourceDemo {
         applicationContext.register(ResolvableDependencySourceDemo.class);
 
         applicationContext.addBeanFactoryPostProcessor(beanFactory -> {
-            // 注册 Resolvable Dependency
+            // 注册 Resolvable Dependency.
             beanFactory.registerResolvableDependency(String.class, "Hello,World");
         });
 

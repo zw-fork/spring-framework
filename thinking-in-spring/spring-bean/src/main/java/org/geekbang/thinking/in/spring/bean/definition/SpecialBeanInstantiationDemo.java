@@ -19,15 +19,13 @@ package org.geekbang.thinking.in.spring.bean.definition;
 import org.geekbang.thinking.in.spring.bean.factory.DefaultUserFactory;
 import org.geekbang.thinking.in.spring.bean.factory.UserFactory;
 import org.geekbang.thinking.in.spring.ioc.overview.domain.User;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.ServiceLoader;
-
-import static java.util.ServiceLoader.load;
 
 /**
  * 特殊的 Bean 实例化示例
@@ -38,9 +36,15 @@ import static java.util.ServiceLoader.load;
 public class SpecialBeanInstantiationDemo {
 
     public static void main(String[] args) {
+
+        System.out.println("---------方法一：ServiceLoader----------");
+        demoServiceLoader();
+
+        System.out.println("-------方法二：使用Spring中的ServiceLoaderFactoryBean------------");
+        // 使用Spring中的ServiceLoaderFactoryBean类。(org.geekbang.thinking.in.spring.bean.factory.UserFactory文件与方法一一样，都需要定义)
         // 配置 XML 配置文件
         // 启动 Spring 应用上下文
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:/META-INF/special-bean-instantiation-context.xml");
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:/META-INF/special-bean-instantiation-context.xml");
         // 通过 ApplicationContext 获取 AutowireCapableBeanFactory
         AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
 
@@ -48,16 +52,25 @@ public class SpecialBeanInstantiationDemo {
 
         displayServiceLoader(serviceLoader);
 
-//        demoServiceLoader();
+		Object d = beanFactory.getBean("userListFactoryServiceLoader", List.class);
 
+	//	displayServiceLoader(serviceLoaderList);
+
+        System.out.println("--------方法三：创建DefaultUserFactory-----------");
         // 创建 UserFactory 对象，通过 AutowireCapableBeanFactory
         UserFactory userFactory = beanFactory.createBean(DefaultUserFactory.class);
         System.out.println(userFactory.createUser());
 
+        System.out.println("---------方法四：创建User----------");
+        User user = beanFactory.createBean(User.class);
+        System.out.println(user);
+
+
     }
 
     public static void demoServiceLoader() {
-        ServiceLoader<UserFactory> serviceLoader = load(UserFactory.class, Thread.currentThread().getContextClassLoader());
+        //通过ServiceLoader，加载所有定义的UserFactory对象.  通过classPath下META-INF/services/目录中的文件查找. 文件名为接口全名，内容为(所有)实现类全名
+        ServiceLoader<UserFactory> serviceLoader = ServiceLoader.load(UserFactory.class, Thread.currentThread().getContextClassLoader());
         displayServiceLoader(serviceLoader);
     }
 
@@ -65,6 +78,8 @@ public class SpecialBeanInstantiationDemo {
         Iterator<UserFactory> iterator = serviceLoader.iterator();
         while (iterator.hasNext()) {
             UserFactory userFactory = iterator.next();
+			System.out.println(userFactory.getClass());
+            // 创建实例对象
             System.out.println(userFactory.createUser());
         }
     }

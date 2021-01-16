@@ -32,13 +32,16 @@ import org.springframework.core.io.Resource;
 @PropertySource(value = "META-INF/default.properties",encoding="UTF-8")
 public class ExternalConfigurationDependencySourceDemo {
 
-    @Value("${user.id:-1}")
+    @Value("${user.id:-1}")   //默认值为-1
     private Long id;
 
     @Value("${usr.name}")
     private String name;
 
-    @Value("${user.resource:classpath://default.properties}")
+	@Value("${user.name}")  //系统配置。优先级比default.properties配置高
+	private String username;
+
+    @Value("${user.resource:classpath://default.properties}")  //默认值为 classpath://default.properties
     private Resource resource;
 
     public static void main(String[] args) {
@@ -57,6 +60,7 @@ public class ExternalConfigurationDependencySourceDemo {
         System.out.println("demo.id = " + demo.id);
         System.out.println("demo.name = " + demo.name);
         System.out.println("demo.resource = " + demo.resource);
+		System.out.println("demo.username = " + demo.username);
 
         // 显示地关闭 Spring 应用上下文
         applicationContext.close();

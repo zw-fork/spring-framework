@@ -491,6 +491,13 @@ final class LogAdapter {
 		}
 
 		@Override
+		public void tip(Object message) {
+			if (message instanceof String || this.logger.isWarnEnabled()) {
+				this.logger.log(null, FQCN, LocationAwareLogger.WARN_INT, String.valueOf(message), null, null);
+			}
+		}
+
+		@Override
 		protected Object readResolve() {
 			return Slf4jAdapter.createLocationAwareLog(this.name);
 		}
@@ -592,6 +599,11 @@ final class LogAdapter {
 		@Override
 		public void trace(Object message) {
 			log(java.util.logging.Level.FINEST, message, null);
+		}
+
+		@Override
+		public void tip(Object message) {
+			log(java.util.logging.Level.INFO, message, null);
 		}
 
 		@Override

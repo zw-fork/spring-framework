@@ -5,6 +5,14 @@
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="userFactoryServiceLoader" class="org.springframework.beans.factory.serviceloader.ServiceLoaderFactoryBean">
+		<!--
+		serviceType：指定要查找的文件名称class对象
+		通过classPath下META-INF/services/目录中的文件查找. 文件名为接口全名(org.geekbang.thinking.in.spring.bean.factory.UserFactory)，内容为(所有)实现类全名
+		-->
         <property name="serviceType" value="org.geekbang.thinking.in.spring.bean.factory.UserFactory" />
     </bean>
+
+	<bean id="userListFactoryServiceLoader" class="org.springframework.beans.factory.serviceloader.ServiceListFactoryBean">
+		<property name="serviceType" value="org.geekbang.thinking.in.spring.bean.factory.UserFactory" />
+	</bean>
 </beans>

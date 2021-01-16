@@ -70,6 +70,8 @@ public abstract class AbstractServiceLoaderBasedFactoryBean extends AbstractFact
 	@Override
 	protected Object createInstance() {
 		Assert.notNull(getServiceType(), "Property 'serviceType' is required");
+		// ServiceFactoryBean：只返回一种实现
+		// ServiceListFactoryBean：返回文件中所有得实现
 		return getObjectToExpose(ServiceLoader.load(getServiceType(), this.beanClassLoader));
 	}
 

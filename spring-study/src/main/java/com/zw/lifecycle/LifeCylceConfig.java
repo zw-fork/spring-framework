@@ -5,8 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LifeCylceConfig {
-  @Bean(initMethod = "myInit", destroyMethod = "myDestory")
-  Person person() {
-    return new Person();
-  }
+
+	@Bean(initMethod = "myInit", destroyMethod = "myDestory")
+  	Person person() {
+    	return new Person("zw");
+  	}
 }

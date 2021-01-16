@@ -263,6 +263,7 @@ public class AnnotatedBeanDefinitionReader {
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
 		// 为注解Bean定义设置作用域
 		abd.setScope(scopeMetadata.getScopeName());
+		// 默认为类名
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
 		// 处理注解Bean定义中的通用注解

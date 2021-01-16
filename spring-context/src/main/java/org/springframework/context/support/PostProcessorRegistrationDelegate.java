@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,6 +48,9 @@ import org.springframework.lang.Nullable;
  * @since 4.0
  */
 final class PostProcessorRegistrationDelegate {
+
+	private static final Log logger = LogFactory.getLog(PostProcessorRegistrationDelegate.class);
+
 
 	private PostProcessorRegistrationDelegate() {
 	}
@@ -204,7 +208,11 @@ final class PostProcessorRegistrationDelegate {
 		// Register BeanPostProcessorChecker that logs an info message when
 		// a bean is created during BeanPostProcessor instantiation, i.e. when
 		// a bean is not eligible for getting processed by all BeanPostProcessors.
+
+		// 这个beanProcessorTargetCount此处赋值了，后续就都不会变了，BeanPostProcessorChecker就是和这个进行比较的~
+		// beanFactory里面的Bean实例总个数+1（自己）+bean定义信息~ 即，beanProcessorTargetCount为应用所有的BeanPostProcessor
 		int beanProcessorTargetCount = beanFactory.getBeanPostProcessorCount() + 1 + postProcessorNames.length;
+		logger.info("register BeanPostProcessorChecker Bean to beanPostProcessors");
 		beanFactory.addBeanPostProcessor(new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount));
 
 		// Separate between BeanPostProcessors that implement PriorityOrdered,
@@ -231,6 +239,7 @@ final class PostProcessorRegistrationDelegate {
 
 		// First, register the BeanPostProcessors that implement PriorityOrdered.
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
+		logger.info("First, register the BeanPostProcessors that implement PriorityOrdered to beanPostProcessors： " + priorityOrderedPostProcessors.stream().collect(Collectors.toList()));
 		registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
 
 		// Next, register the BeanPostProcessors that implement Ordered.
@@ -243,6 +252,7 @@ final class PostProcessorRegistrationDelegate {
 			}
 		}
 		sortPostProcessors(orderedPostProcessors, beanFactory);
+		logger.info("Next, register the BeanPostProcessors that implement Ordered to beanPostProcessors： " + orderedPostProcessors.stream().collect(Collectors.toList()));
 		registerBeanPostProcessors(beanFactory, orderedPostProcessors);
 
 		// Now, register all regular BeanPostProcessors.
@@ -255,15 +265,19 @@ final class PostProcessorRegistrationDelegate {
 				internalPostProcessors.add(pp);
 			}
 		}
+		logger.info("注册 nonOrdered BeanPostProcessor Bean to beanPostProcessors： " + nonOrderedPostProcessorNames.stream().collect(Collectors.toList()));
 		registerBeanPostProcessors(beanFactory, nonOrderedPostProcessors);
 
 		// Finally, re-register all internal BeanPostProcessors.
 		sortPostProcessors(internalPostProcessors, beanFactory);
+		logger.info("Finally, re-register all internal BeanPostProcessors to beanPostProcessors： " + internalPostProcessors.stream().collect(Collectors.toList()));
 		registerBeanPostProcessors(beanFactory, internalPostProcessors);
 
 		// Re-register post-processor for detecting inner beans as ApplicationListeners,
 		// moving it to the end of the processor chain (for picking up proxies etc).
+		logger.info("register ApplicationListenerDetector Bean到beanPostProcessors");
 		beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(applicationContext));
+
 	}
 
 	private static void sortPostProcessors(List<?> postProcessors, ConfigurableListableBeanFactory beanFactory) {
@@ -284,6 +298,7 @@ final class PostProcessorRegistrationDelegate {
 			Collection<? extends BeanDefinitionRegistryPostProcessor> postProcessors, BeanDefinitionRegistry registry) {
 
 		for (BeanDefinitionRegistryPostProcessor postProcessor : postProcessors) {
+			logger.info("获取所有BeanDefinitionRegistryPostProcessor、PriorityOrdered，并调用postProcessBeanDefinitionRegistry方法 " + postProcessor.getClass().getSimpleName());
 			postProcessor.postProcessBeanDefinitionRegistry(registry);
 		}
 	}

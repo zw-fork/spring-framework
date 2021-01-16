@@ -2,10 +2,11 @@ package com.zw.lifecycle;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LifeCylceBeanPostProcessor implements BeanPostProcessor {
+public class LifeCylceBeanPostProcessor implements BeanPostProcessor, Ordered {
 
     public LifeCylceBeanPostProcessor() {
         super();
@@ -32,4 +33,9 @@ public class LifeCylceBeanPostProcessor implements BeanPostProcessor {
 		}
         return arg0;
     }
+
+	@Override
+	public int getOrder() {
+		return Ordered.HIGHEST_PRECEDENCE;
+	}
 }

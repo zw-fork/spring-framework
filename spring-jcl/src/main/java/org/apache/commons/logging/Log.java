@@ -193,4 +193,8 @@ public interface Log {
 	 */
 	void trace(Object message, Throwable t);
 
+	default void tip(Object message) {
+
+	}
+
 }

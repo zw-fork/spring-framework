@@ -29,6 +29,7 @@ import java.util.Optional;
 import kotlin.reflect.KProperty;
 import kotlin.reflect.jvm.ReflectJvmMapping;
 
+import lombok.ToString;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.InjectionPoint;
@@ -42,6 +43,16 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 继承自InjectionPoint,一个依赖描述符DependencyDescriptor首先包含了自己所描述的注入点的信息，
+ * 除此之外，它还包含了其他一些信息 :
+ *
+ * 依赖是否必要required;
+ * 是否饥饿加载eager;
+ * 嵌套级别 nestingLevel;
+ * 以及其它一些工具方法。
+ *
+ *
+ * 以 AnnotationDependencyInjectionResolutionDemo.java为例
  * Descriptor for a specific dependency that is about to be injected.
  * Wraps a constructor parameter, a method parameter or a field,
  * allowing unified access to their metadata.
@@ -50,27 +61,68 @@ import org.springframework.util.ObjectUtils;
  * @since 2.5
  */
 @SuppressWarnings("serial")
+@ToString
 public class DependencyDescriptor extends InjectionPoint implements Serializable {
 
+	/**
+	 * 保存所包装依赖(成员属性或者成员方法的某个参数)所在的声明类，
+	 *
+	 * class org.geekbang.thinking.in.spring.ioc.overview.repository.UserRepository
+	 * 表示向UserRepository类进行注入
+	 */
 	private final Class<?> declaringClass;
 
+	/**
+	 * 成员方法注入
+	 * 如果所包装依赖是成员方法的某个参数，则这里记录该成员方法的名称
+	 *
+	 * setBeanFactory
+	 * 表示调用UserRepository.setBeanFactory()方法进行注入
+	 *
+	 */
 	@Nullable
 	private String methodName;
 
+	/**
+	 * 注入的参数类型数组
+	 *
+	 * interface org.springframework.beans.factory.BeanFactory
+	 * 表示通过setBeanFactory()方法注入一个类型为BeanFactory的参数
+	 */
 	@Nullable
 	private Class<?>[] parameterTypes;
 
+	/**
+	 * 如果所包装的是成员方法的某个参数，则这里记录该参数在该函数参数列表中的索引
+	 *
+	 * o，表示注入的BeanFactory为setBeanFactory()方法的第一个参数
+	 */
 	private int parameterIndex;
 
+	/**
+	 * 属性注入
+	 * 如果所包装的是成员属性，则这里记录该成员属性的名称
+	 *
+	 * 如果执行的是属性注入fieldName为属性的名称；如果执行的是方法注入，fieldName为空
+	 */
 	@Nullable
 	private String fieldName;
 
+	/**
+	 * 标识所包装依赖是否必要依赖
+	 */
 	private final boolean required;
 
+	/**
+	 * 标识所包装依赖是否需要饥饿加载。即，是否懒加载
+	 */
 	private final boolean eager;
 
 	private int nestingLevel = 1;
 
+	/**
+	 * 标识所包装依赖的包含者类，通常和声明类是同一个
+	 */
 	@Nullable
 	private Class<?> containingClass;
 

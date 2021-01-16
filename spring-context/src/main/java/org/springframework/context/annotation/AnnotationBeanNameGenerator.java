@@ -156,8 +156,9 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	protected String buildDefaultBeanName(BeanDefinition definition) {
 		String beanClassName = definition.getBeanClassName();
 		Assert.state(beanClassName != null, "No bean class name set");
+		//org.geekbang.thinking.in.spring.bean.definition.AnnotationBeanDefinitionDemo   -> AnnotationBeanDefinitionDemo
 		String shortClassName = ClassUtils.getShortName(beanClassName);
-		return Introspector.decapitalize(shortClassName);
+		return Introspector.decapitalize(shortClassName);    // -> annotationBeanDefinitionDemo
 	}
 
 }

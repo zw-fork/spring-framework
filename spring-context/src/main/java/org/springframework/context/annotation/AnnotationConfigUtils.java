@@ -21,6 +21,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -58,6 +60,9 @@ import org.springframework.util.ClassUtils;
  * @see org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor
  */
 public abstract class AnnotationConfigUtils {
+
+	protected final static Log logger = LogFactory.getLog(AnnotationConfigUtils.class.getClass());
+
 
 	/**
 	 * The bean name of the internally managed Configuration annotation processor.
@@ -147,6 +152,12 @@ public abstract class AnnotationConfigUtils {
 	 */
 	public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 			BeanDefinitionRegistry registry, @Nullable Object source) {
+
+		logger.info("注册Spring内建Bean，ConfigurationClassPostProcessor");
+		logger.info("注册Spring内建Bean，AutowiredAnnotationBeanPostProcessor：用于处理@Autowired、@Value、 @Inject 依赖注入注解");
+		logger.info("注册Spring内建Bean，CommonAnnotationBeanPostProcessor： 用于处理@Resource、@PostConstruct、 @PreDestroy注解");
+		logger.info("注册Spring内建Bean，EventListenerMethodProcessor：");
+		logger.info("注册Spring内建Bean，DefaultEventListenerFactory：");
 
 		DefaultListableBeanFactory beanFactory = unwrapDefaultListableBeanFactory(registry);
 		if (beanFactory != null) {

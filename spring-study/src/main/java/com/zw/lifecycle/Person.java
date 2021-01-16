@@ -1,15 +1,20 @@
 package com.zw.lifecycle;
 
+import lombok.Data;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,25 +23,41 @@ import javax.annotation.PreDestroy;
 /**
  * @author qsk
  */
-@Component
+@Data
 public class Person implements BeanFactoryAware, BeanNameAware, ApplicationContextAware,
-        InitializingBean, DisposableBean, BeanPostProcessor {
+        InitializingBean, DisposableBean {
 
 	@Value(value="zw")
     private String name;
     private String address;
     private int phone;
 
-    private BeanFactory beanFactory;
-    private ApplicationContext applicationContext;
-    private String beanName;
+    private String beanName;   //通过回调方法注入
+
+	private BeanFactory beanFactory;  //通过回调方法注入
+	@Autowired
+	private BeanFactory beanFactory2;
+
+	@Autowired
+	private ResourceLoader resourceLoader;
+
+	private ApplicationContext applicationContext;  //通过回调方法注入
+
+	@Autowired
+	private ApplicationContext applicationContext2;
+
+	@Autowired
+	private Environment environment;
+
+	@Autowired
+	private ApplicationEventPublisher applicationEventPublisher;
 
     static {
 		System.out.println("Person进行初始化...");
 	}
 
-    public Person() {
-        System.out.println("【构造器】调用Person的构造器实例化");
+    public Person(String name) {
+        System.out.println("【构造器】调用Person的构造器实例化: " + name);
     }
 
     public String getName() {
@@ -136,10 +157,5 @@ public class Person implements BeanFactoryAware, BeanNameAware, ApplicationConte
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		System.out.println("【ApplicationContextAware接口】调用ApplicationContextAware.setApplicationContext方法: " + applicationContext.getApplicationName());
 		this.applicationContext = applicationContext;
-	}
-
-	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		return bean;
 	}
 }

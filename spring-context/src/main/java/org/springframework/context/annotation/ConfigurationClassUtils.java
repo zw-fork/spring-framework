@@ -125,11 +125,13 @@ abstract class ConfigurationClassUtils {
 		// @Configuration
 		if (config != null && !Boolean.FALSE.equals(config.get("proxyBeanMethods"))) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
+			logger.info("Full模式: @Configuration注解：" + beanDef.getBeanClassName());
 		}
 		/*
 		 * @Component、@ComponentScan、@Import、@ImportResource
 		 */
 		else if (config != null || isConfigurationCandidate(metadata)) {
+			logger.info("Lite模式: 类有@Component、@ComponentScan、@Import、@ImportResource 或方法有@Bean注解：" + beanDef.getBeanClassName());
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
 		else {

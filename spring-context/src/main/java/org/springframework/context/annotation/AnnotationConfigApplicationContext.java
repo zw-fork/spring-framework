@@ -106,7 +106,6 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		this();
 		//扫描包，注册BeanDefinition到DefaultListableBeanFactory类中Map中
 		scan(basePackages);
-		//
 		refresh();
 	}
 

@@ -368,11 +368,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				/**
-				 * 创建其他类型的Bean。比如根据生命周期创建不同Bean。request、session、application等生命周期
+				 * 创建其他类型的Bean。比如根据生命周期创建不同Bean。request、session、application等生命周期。
+				 * 或者实现Scope接口，自定义Scope，比如 org.springframework.cloud.context.scope.refresh.RefreshScope
 				 */
 				else {
 					String scopeName = mbd.getScope();
-					final Scope scope = this.scopes.get(scopeName);
+					final Scope scope = this.scopes.get(scopeName);  //scopes中保存了Scope接口实现类
 					// Bean定义资源中没有配置生命周期范围，则Bean定义不合法
 					if (scope == null) {
 						throw new IllegalStateException("No Scope registered for scope name '" + scopeName + "'");
@@ -954,6 +955,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 		// Add to end of list
 		this.beanPostProcessors.add(beanPostProcessor);
+		logger.info("add beanPostProcessors: " + beanPostProcessor.getClass().getSimpleName());
 	}
 
 	@Override

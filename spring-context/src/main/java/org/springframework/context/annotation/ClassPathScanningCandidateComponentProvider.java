@@ -18,11 +18,8 @@ package org.springframework.context.annotation;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -223,6 +220,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 		catch (ClassNotFoundException ex) {
 			// JSR-330 API not available - simply skip.
 		}
+		logger.info("需要扫描的class包含的注解： " + this.includeFilters.stream().map(value -> ((AnnotationTypeFilter)value).getAnnotationType().getSimpleName()).collect(Collectors.toList()));
 	}
 
 	/**
@@ -422,6 +420,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 			Resource[] resources = getResourcePatternResolver().getResources(packageSearchPath);
 			boolean traceEnabled = logger.isTraceEnabled();
 			boolean debugEnabled = logger.isDebugEnabled();
+			logger.info("获取扫描包下的资源Resource： " + Arrays.stream(resources).collect(Collectors.toList()));
+			logger.info("将符合条件的资源封装为ScannedGenericBeanDefinition，并放到Set集合返回");
 			for (Resource resource : resources) {
 				if (traceEnabled) {
 					logger.trace("Scanning " + resource);

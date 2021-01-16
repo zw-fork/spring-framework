@@ -174,7 +174,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	private final Map<Class<?>, String[]> singletonBeanNamesByType = new ConcurrentHashMap<>(64);
 
 	/** List of bean definition names, in registration order.
-	 * 保存所有的Bean名称
+	 * 保存所有的Bean名称，顺序存储。（ beanDefinitionMap是无序的 ）
 	 * */
 	private volatile List<String> beanDefinitionNames = new ArrayList<>(256);
 
@@ -973,6 +973,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
 				// 注册beanDefinition，注册的过程中需要线程同步，以保证数据的一致性
 				synchronized (this.beanDefinitionMap) {
+					logger.info("注册beanDefinition(hasBeanCreationStarted)：" + beanName);
 					this.beanDefinitionMap.put(beanName, beanDefinition);
 					List<String> updatedDefinitions = new ArrayList<>(this.beanDefinitionNames.size() + 1);
 					updatedDefinitions.addAll(this.beanDefinitionNames);
@@ -982,6 +983,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 			else {
+				logger.info("注册beanDefinition：" + beanName);
 				// 表示仍然在启动  注册的状态~~~就很好处理了 put仅需，名字add进去
 				// Still in startup registration phase
 				this.beanDefinitionMap.put(beanName, beanDefinition);
@@ -1211,11 +1213,22 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		return null;
 	}
 
+	/**
+	 * 依赖处理方法
+	 * @param descriptor the descriptor for the dependency (field/method/constructor)
+	 * @param requestingBeanName the name of the bean which declares the given dependency
+	 * @param autowiredBeanNames a Set that all names of autowired beans (used for
+	 * resolving the given dependency) are supposed to be added to
+	 * @param typeConverter the TypeConverter to use for populating arrays and collections
+	 * @return
+	 * @throws BeansException
+	 */
 	@Override
 	@Nullable
 	public Object resolveDependency(DependencyDescriptor descriptor, @Nullable String requestingBeanName,
 			@Nullable Set<String> autowiredBeanNames, @Nullable TypeConverter typeConverter) throws BeansException {
 
+		logger.info("依赖注入：bean = " + requestingBeanName + ", dependency = " + descriptor.getDependencyName());
 		descriptor.initParameterNameDiscovery(getParameterNameDiscoverer());
 		if (Optional.class == descriptor.getDependencyType()) {
 			return createOptionalDependency(descriptor, requestingBeanName);
@@ -1228,12 +1241,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			return new Jsr330Factory().createDependencyProvider(descriptor, requestingBeanName);
 		}
 		else {
+			//处理 @Lazy。 返回一个代理对象，当调用时，才通过该代理对象获取具体的依赖对象
 			Object result = getAutowireCandidateResolver().getLazyResolutionProxyIfNecessary(
 					descriptor, requestingBeanName);
 			if (result == null) {
 				result = doResolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter);
 			}
-			return result;
+			return result;  // 返回注入的Bean实例对象
 		}
 	}
 
@@ -1269,6 +1283,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 
+			// 特殊类型处理：比如：Map、数组等
 			Object multipleBeans = resolveMultipleBeans(descriptor, beanName, autowiredBeanNames, typeConverter);
 			if (multipleBeans != null) {
 				return multipleBeans;
@@ -1286,6 +1301,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			Object instanceCandidate;
 
 			if (matchingBeans.size() > 1) {
+				// 如果有多个，找出一个Primary对象[user, superUser] -> [superUser]
 				autowiredBeanName = determineAutowireCandidate(matchingBeans, descriptor);
 				if (autowiredBeanName == null) {
 					if (isRequired(descriptor) || !indicatesMultipleBeans(type)) {
@@ -1480,6 +1496,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		String[] candidateNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 				this, requiredType, true, descriptor.isEager());
 		Map<String, Object> result = new LinkedHashMap<>(candidateNames.length);
+
+		// 依赖来源一：
+		//resolvableDependencies集合默认存放AbstractApplicationContext.prepareBeanFactory()方法中，通过registerResolvableDependency()方法保存的4种实例对象
+		//如果当前依赖的对象，存放在resolvableDependencies中，则取出保存到result集合
 		for (Map.Entry<Class<?>, Object> classObjectEntry : this.resolvableDependencies.entrySet()) {
 			Class<?> autowiringType = classObjectEntry.getKey();
 			if (autowiringType.isAssignableFrom(requiredType)) {

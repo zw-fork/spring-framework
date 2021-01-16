@@ -31,6 +31,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.PatternMatchUtils;
@@ -252,8 +253,9 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	public int scan(String... basePackages) {
 		int beanCountAtScanStart = this.registry.getBeanDefinitionCount();
 
+		logger.info("开始扫描包，并注册BeanDefine..........");
 		doScan(basePackages);
-
+		logger.info("扫描结束，注册BeanDefine结束..........");
 		// Register annotation config processors, if necessary.
 		if (this.includeAnnotationConfig) {
 			AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
@@ -275,9 +277,13 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		Assert.notEmpty(basePackages, "At least one base package must be specified");
 		Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<>();
 		for (String basePackage : basePackages) {
+			logger.info("扫描包获取BeanDefinition: " + basePackage);
 			//获取指定包下的@Compent注解注解类，封装为BeanDefinition定义
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
+			logger.info("修改获取的BeanDefinition集合对象参数。比如进行setScope、setPrimary等操作");
+			logger.info("调用BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, registry)方法，对BeanDefinition进行注册");
 			for (BeanDefinition candidate : candidates) {
+				//解析 @Scope
 				ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(candidate);
 				candidate.setScope(scopeMetadata.getScopeName());
 				String beanName = this.beanNameGenerator.generateBeanName(candidate, this.registry);
@@ -296,7 +302,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 					beanDefinitions.add(definitionHolder);
 					// 注册BeanDefinition。
 					//将BeanDefinition注册进DefaultListableBeanFactory.beanDefinitionMap
-					// 将beanName注册进DefaultListableBeanFactory.beanDefinitionNames
+					// 将beanName注册进DefaultListableBeanFactory.beanDefinitionNames Map集合
 					registerBeanDefinition(definitionHolder, this.registry);
 				}
 			}

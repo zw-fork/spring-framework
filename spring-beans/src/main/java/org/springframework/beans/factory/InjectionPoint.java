@@ -27,6 +27,10 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * InjectionPoint用于描述一个注入点，这个注入点是以下两种情况之一 :
+ * 		一个实例方法(构造函数或者成员方法)的某个参数(参数类型，参数索引)及该参数上的注解信息;
+ * 		实例成员属性以及该属性上的注解信息；
+ *
  * A simple descriptor for an injection point, pointing to a method/constructor
  * parameter or a field. Exposed by {@link UnsatisfiedDependencyException}.
  * Also available as an argument for factory methods, reacting to the

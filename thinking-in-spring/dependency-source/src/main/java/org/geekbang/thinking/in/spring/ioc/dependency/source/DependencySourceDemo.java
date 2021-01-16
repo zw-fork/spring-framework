@@ -16,6 +16,7 @@
  */
 package org.geekbang.thinking.in.spring.ioc.dependency.source;
 
+import org.geekbang.thinking.in.spring.ioc.overview.domain.User;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.core.io.ResourceLoader;
 
@@ -31,6 +33,13 @@ import javax.annotation.PostConstruct;
 /**
  * 依赖来源示例
  *
+ * AbstractApplicationContext#prepareBeanFactory(ConfigurableListableBeanFactory):
+ * 		beanFactory.registerResolvableDependency(BeanFactory.class, beanFactory);   --> beanFactory
+ * 		beanFactory.registerResolvableDependency(ResourceLoader.class, this);     --> resourceLoader
+ * 		beanFactory.registerResolvableDependency(ApplicationEventPublisher.class, this);   --> applicationContext
+ * 		beanFactory.registerResolvableDependency(ApplicationContext.class, this);    --> applicationEventPublisher
+ *
+ * 这四个Bean不由BeanFactory管理。因此，不能通过beanFactory.getBean()获取.
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since
  */
@@ -49,21 +58,34 @@ public class DependencySourceDemo {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
-    @PostConstruct
+	@Autowired
+	private User user;
+
+	@PostConstruct
     public void initByInjection() {
-        System.out.println("beanFactory == applicationContext " + (beanFactory == applicationContext));
+        System.out.println("beanFactory == applicationContext " + (beanFactory == applicationContext) + " --> " + beanFactory.getClass().getSimpleName());
         System.out.println("beanFactory == applicationContext.getBeanFactory() " + (beanFactory == applicationContext.getAutowireCapableBeanFactory()));
         System.out.println("resourceLoader == applicationContext " + (resourceLoader == applicationContext));
         System.out.println("ApplicationEventPublisher == applicationContext " + (applicationEventPublisher == applicationContext));
-    }
+		System.out.println("user: " + user);
+
+	}
 
     @PostConstruct
     public void initByLookup() {
+		System.err.println("------------------");
         getBean(BeanFactory.class);
         getBean(ApplicationContext.class);
         getBean(ResourceLoader.class);
         getBean(ApplicationEventPublisher.class);
+		System.err.println(getBean(User.class));
     }
+
+    @Bean
+	public User getUser()
+	{
+		return new User();
+	}
 
     private <T> T getBean(Class<T> beanType) {
         try {
@@ -81,7 +103,6 @@ public class DependencySourceDemo {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
         // 注册 Configuration Class（配置类） -> Spring Bean
         applicationContext.register(DependencySourceDemo.class);
-
         // 启动 Spring 应用上下文
         applicationContext.refresh();
 

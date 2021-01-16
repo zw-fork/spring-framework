@@ -40,3 +40,18 @@ include 'spring-study'
 include 'thinking-in-spring:dependency-injection'
 findProject(':thinking-in-spring:dependency-injection')?.name = 'dependency-injection'
 
+//03_Spring IOC容器概述
+include 'thinking-in-spring:ioc-container-overview'
+findProject(':thinking-in-spring:ioc-container-overview')?.name = 'ioc-container-overview'
+
+//04_Spring Bean基础
+include 'thinking-in-spring:spring-bean'
+findProject(':thinking-in-spring:spring-bean')?.name = 'spring-bean'
+
+include 'thinking-in-spring:dependency-source'
+findProject(':thinking-in-spring:dependency-source')?.name = 'dependency-source'
+
+//17_Spring 事件（Events）
+include 'thinking-in-spring:event'
+findProject(':thinking-in-spring:event')?.name = 'event'
+

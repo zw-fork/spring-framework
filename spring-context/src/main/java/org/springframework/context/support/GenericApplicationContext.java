@@ -21,6 +21,8 @@ import java.lang.reflect.Constructor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
@@ -93,6 +95,8 @@ import org.springframework.util.Assert;
  */
 public class GenericApplicationContext extends AbstractApplicationContext implements BeanDefinitionRegistry {
 
+	protected final static Log logger = LogFactory.getLog(GenericApplicationContext.class);
+
 	// DefaultListableBeanFactory为beanFactory接口底层实现，功能最全
 	private final DefaultListableBeanFactory beanFactory;
 
@@ -112,6 +116,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	public GenericApplicationContext() {
 		//创建BeanFactory。使用DefaultListableBeanFactory作为默认BeanFactory
 		this.beanFactory = new DefaultListableBeanFactory();
+		logger.info("在ApplicationContext中创建beanFactory -> DefaultListableBeanFactory");
 	}
 
 	/**

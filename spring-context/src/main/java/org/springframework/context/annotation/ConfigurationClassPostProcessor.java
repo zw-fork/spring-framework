@@ -24,6 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -301,6 +302,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		if (configCandidates.isEmpty()) {
 			return;
 		}
+
+		logger.info("获取所有配置类的BeanDefinitionHolder对象：" + configCandidates.stream().map(value -> value.getBeanName()).collect(Collectors.toList()));
 
 		// Sort by previously determined @Order value, if applicable
 		configCandidates.sort((bd1, bd2) -> {
