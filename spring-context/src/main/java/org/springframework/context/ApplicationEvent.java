@@ -33,6 +33,7 @@ public abstract class ApplicationEvent extends EventObject {
 	private static final long serialVersionUID = 7099057708183571937L;
 
 	/** System time when the event happened. */
+	//事件发生的时间
 	private final long timestamp;
 
 

@@ -61,13 +61,13 @@ public class ApplicationListenerDemo implements ApplicationEventPublisherAware {
 
         // ApplicationEventMulticaster
         // 启动 Spring 应用上下文
-        context.refresh(); // ContextRefreshedEvent
+        context.refresh(); // 发送ContextRefreshedEvent事件
         // 启动 Spring 上下文
-        context.start();  // ContextStartedEvent
+        context.start();  // 发送CContextStartedEvent事件
         // 停止 Spring 上下文
-        context.stop();  // ContextStoppedEvent
+        context.stop();  // 发送CContextStoppedEvent事件
         // 关闭 Spring 应用上下文
-        context.close(); // ContextClosedEvent
+        context.close(); // 发送CContextClosedEvent事件
     }
 
     @Override
@@ -135,6 +135,7 @@ public class ApplicationListenerDemo implements ApplicationEventPublisherAware {
     }
 
     private static void println(Object printable) {
+    	// 通过打印当前执行线程名，判断事件是否异步执行
         System.out.printf("[线程：%s] : %s\n", Thread.currentThread().getName(), printable);
     }
 }

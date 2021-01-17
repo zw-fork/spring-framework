@@ -32,13 +32,18 @@ public class ObserverDemo {
 
     public static void main(String[] args) {
         EventObservable observable = new EventObservable();
+
         // 添加观察者（监听者）
         observable.addObserver(new EventObserver());
+
         // 发布消息（事件）
         observable.notifyObservers("Hello,World");
     }
 
-    static class EventObservable extends Observable {
+	/**
+	 * 事件发布者
+	 */
+	static class EventObservable extends Observable {
 
         public void setChanged() {
             super.setChanged();
@@ -51,7 +56,10 @@ public class ObserverDemo {
         }
     }
 
-    static class EventObserver implements Observer, EventListener {
+	/**
+	 * 事件接收者
+	 */
+	static class EventObserver implements Observer, EventListener {
 
         @Override
         public void update(Observable o, Object event) {
