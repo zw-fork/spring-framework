@@ -45,10 +45,12 @@ public class ObserverDemo {
 	 */
 	static class EventObservable extends Observable {
 
+		@Override
         public void setChanged() {
             super.setChanged();
         }
 
+        @Override
         public void notifyObservers(Object arg) {
             setChanged();
             super.notifyObservers(new EventObject(arg));
