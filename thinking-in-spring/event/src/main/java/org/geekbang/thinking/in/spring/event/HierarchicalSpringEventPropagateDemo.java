@@ -42,8 +42,10 @@ public class HierarchicalSpringEventPropagateDemo {
         // 2. 创建 current Spring 应用上下文
         AnnotationConfigApplicationContext currentContext = new AnnotationConfigApplicationContext();
         currentContext.setId("current-context");
+
         // 3. current -> parent
         currentContext.setParent(parentContext);
+
         // 注册 MyListener 到 current Spring 应用上下文
         currentContext.register(MyListener.class);
 
@@ -51,20 +53,21 @@ public class HierarchicalSpringEventPropagateDemo {
         parentContext.refresh();
 
         // 5.启动 current Spring 应用上下文
-        currentContext.refresh();
+        currentContext.refresh();  //currentContext含parentContext，会将事件传播到parentContext
 
         // 关闭所有 Spring 应用上下文
         currentContext.close();
         parentContext.close();
     }
 
+    //事件监听器。监听ApplicationContextEvent类型事件
     static class MyListener implements ApplicationListener<ApplicationContextEvent> {
 
-        private Set<ApplicationContextEvent> processedEvents = new LinkedHashSet<>();
+        private static Set<ApplicationContextEvent> processedEvents = new LinkedHashSet<>();
 
         @Override
         public void onApplicationEvent(ApplicationContextEvent event) {
-            if (processedEvents.add(event)) {
+            if (processedEvents.add(event)) {   //缓存事件，避免因为事件的层次性传递特性，导致事件被处理多次.
                 System.out.printf("监听到 Spring 应用上下文[ ID : %s ] 事件 :%s\n", event.getApplicationContext().getId(),
                         event.getClass().getSimpleName());
             }
