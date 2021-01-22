@@ -32,23 +32,18 @@ public class CustomizedSpringEventDemo {
         GenericApplicationContext context = new GenericApplicationContext();
 
         // 1.添加自定义 Spring 事件监听器
-        // ListenerRetriever -> 0 .. N 个 ApplicationListener<MySpringEvent> 实例
-        // MySpringEvent 以及它子孙类
+        // 创建ListenerRetriever -> 0 .. N 个 ApplicationListener<MySpringEvent> 实例
+        // 监听器处理MySpringEvent 以及它子孙类
         context.addApplicationListener(new MySpringEventListener());
 
-        context.addApplicationListener(new ApplicationListener<ApplicationEvent>() {
-
-            @Override
-            public void onApplicationEvent(ApplicationEvent event) {
-                System.out.println("Event : " + event);
-            }
-        });
+        context.addApplicationListener(event -> System.out.println("Event : " + event));
 
         // 2.启动 Spring 应用上下文
         context.refresh();
 
         // 3. 发布自定义 Spring 事件
-        // ListenerCacheKey -> MySpringEvent
+        // 创建ListenerCacheKey -> MySpringEvent
+		// 从ListenerRetriever中获取能够处理MySpringEvent的处理器，将事件发布给处理器处理
         context.publishEvent(new MySpringEvent("Hello,World"));
         context.publishEvent(new MySpringEvent2("2020"));
 

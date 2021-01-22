@@ -57,15 +57,20 @@ public class AsyncEventHandlerDemo {
         if (applicationEventMulticaster instanceof SimpleApplicationEventMulticaster) {
             SimpleApplicationEventMulticaster simpleApplicationEventMulticaster =
                     (SimpleApplicationEventMulticaster) applicationEventMulticaster;
+
             // 切换 taskExecutor
             ExecutorService taskExecutor = newSingleThreadExecutor(new CustomizableThreadFactory("my-spring-event-thread-pool"));
+
             // 同步 -> 异步
             simpleApplicationEventMulticaster.setTaskExecutor(taskExecutor);
 
             // 添加 ContextClosedEvent 事件处理
             applicationEventMulticaster.addApplicationListener(new ApplicationListener<ContextClosedEvent>() {
-                @Override
+
+            	// 监听context.close()发送的ContextClosedEvent事件。
+            	@Override
                 public void onApplicationEvent(ContextClosedEvent event) {
+            		//关闭线程池
                     if (!taskExecutor.isShutdown()) {
                         taskExecutor.shutdown();
                     }

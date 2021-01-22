@@ -44,7 +44,7 @@ public class ComponentScanDemo {
 
         // 依赖查找 TestClass Bean
         // TestClass 标注 @MyComponent2
-        // @MyComponent2 <- @MyComponent <- @Component
+        // @MyComponent2 -> @MyComponent -> @Component
         // 从 Spring 4.0 开始支持多层次 @Component "派生"
         TestClass testClass = context.getBean(TestClass.class);
 

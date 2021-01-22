@@ -67,6 +67,7 @@ public class AnnotatedAsyncEventHandlerDemo {
         System.out.printf("[线程 ： %s] onEvent方法监听到事件 : %s\n", Thread.currentThread().getName(), event);
     }
 
+    //自定义异步线程池，执行异步事件
     @Bean
     public Executor taskExecutor() {
         ExecutorService taskExecutor = newSingleThreadExecutor(new CustomizableThreadFactory("my-spring-event-thread-pool-a"));

@@ -30,6 +30,9 @@ import javax.annotation.PostConstruct;
 /**
  * 注入 {@link ApplicationEventPublisher} 示例
  *
+ * #号后面的序号，指定了事件的执行顺序
+ *
+ * ApplicationContextAwareProcessor类指定了Aware事件回调的执行顺序
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since
  */
@@ -68,11 +71,13 @@ public class InjectingApplicationEventPublisherDemo implements ApplicationEventP
         context.close();
     }
 
+    //ApplicationEventPublisherAware实现的方法
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) { // #1
         applicationEventPublisher.publishEvent(new MySpringEvent("The event from ApplicationEventPublisherAware"));
     }
 
+    //ApplicationContextAware实现的方法
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException { // #2
         applicationEventPublisher.publishEvent(new MySpringEvent("The event from ApplicationContextAware"));

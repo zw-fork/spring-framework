@@ -1,5 +1,6 @@
 pluginManagement {
 	repositories {
+		maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
 		gradlePluginPortal()
 		maven { url 'https://repo.spring.io/plugins-release' }
 	}
@@ -55,3 +56,6 @@ findProject(':thinking-in-spring:dependency-source')?.name = 'dependency-source'
 include 'thinking-in-spring:event'
 findProject(':thinking-in-spring:event')?.name = 'event'
 
+//18_Spring注解
+include 'thinking-in-spring:annotation'
+findProject(':thinking-in-spring:annotation')?.name = 'annotation'

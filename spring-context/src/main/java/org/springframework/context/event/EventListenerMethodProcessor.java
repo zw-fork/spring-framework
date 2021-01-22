@@ -157,6 +157,7 @@ public class EventListenerMethodProcessor
 
 			Map<Method, EventListener> annotatedMethods = null;
 			try {
+				// 获取所有标注了@EventListener的方法
 				annotatedMethods = MethodIntrospector.selectMethods(targetType,
 						(MethodIntrospector.MetadataLookup<EventListener>) method ->
 								AnnotatedElementUtils.findMergedAnnotation(method, EventListener.class));
@@ -180,15 +181,20 @@ public class EventListenerMethodProcessor
 				Assert.state(context != null, "No ApplicationContext set");
 				List<EventListenerFactory> factories = this.eventListenerFactories;
 				Assert.state(factories != null, "EventListenerFactory List not initialized");
+				// annotatedMethods为某个Bean中 @EventListener注解的方法集合
 				for (Method method : annotatedMethods.keySet()) {
 					for (EventListenerFactory factory : factories) {
 						if (factory.supportsMethod(method)) {
 							Method methodToUse = AopUtils.selectInvocableMethod(method, context.getType(beanName));
+
+							// 创建一个ApplicationListener对象，并将@EventListener注解的方法，作为处理事件的方法。
 							ApplicationListener<?> applicationListener =
 									factory.createApplicationListener(beanName, targetType, methodToUse);
 							if (applicationListener instanceof ApplicationListenerMethodAdapter) {
 								((ApplicationListenerMethodAdapter) applicationListener).init(context, this.evaluator);
 							}
+							// 将applicationListener添加到SimpleApplicationEventMulticaster对象。有事件发生时，
+							// SimpleApplicationEventMulticaster对象会进行广播，发送给满足条件的ApplicationListener对象执行
 							context.addApplicationListener(applicationListener);
 							break;
 						}

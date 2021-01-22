@@ -65,6 +65,7 @@ public abstract class AbstractApplicationEventMulticaster
 
 	private final ListenerRetriever defaultRetriever = new ListenerRetriever(false);
 
+	// 事件与事件处理器之间的关联. 一个事件，对应多个事件处理器
 	final Map<ListenerCacheKey, ListenerRetriever> retrieverCache = new ConcurrentHashMap<>(64);
 
 	@Nullable
@@ -359,8 +360,10 @@ public abstract class AbstractApplicationEventMulticaster
 	 */
 	private static final class ListenerCacheKey implements Comparable<ListenerCacheKey> {
 
+		// 事件的泛型类型。比如，MySpringEvent的泛型描述
 		private final ResolvableType eventType;
 
+		// 事件的class类型。比如：MySpringEvent的class类型
 		@Nullable
 		private final Class<?> sourceType;
 
@@ -417,8 +420,10 @@ public abstract class AbstractApplicationEventMulticaster
 	 */
 	private class ListenerRetriever {
 
+		// 事件处理器集合
 		public final Set<ApplicationListener<?>> applicationListeners = new LinkedHashSet<>();
 
+		// 事件处理器Bean名称
 		public final Set<String> applicationListenerBeans = new LinkedHashSet<>();
 
 		private final boolean preFiltered;

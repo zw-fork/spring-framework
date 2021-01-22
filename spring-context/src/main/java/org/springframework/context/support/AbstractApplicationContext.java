@@ -667,7 +667,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Allow for the collection of early ApplicationEvents,
 		// to be published once the multicaster is available...
-		// 允许应用启动之前的事件，当multicaster一旦可用的时候，可用立刻响应发布的事件。
+		// 允许应用启动之前的事件，当multicaster一旦可用的时候，可立刻响应发布的事件。
 		this.earlyApplicationEvents = new LinkedHashSet<>();
 	}
 
@@ -830,9 +830,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Initialize the ApplicationEventMulticaster.
 	 * Uses SimpleApplicationEventMulticaster if none defined in the context.
 	 * @see org.springframework.context.event.SimpleApplicationEventMulticaster
+	 *
+	 * 初始化ApplicationEventMulticaster对象，并放入容器。
 	 */
 	protected void initApplicationEventMulticaster() {
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+		//从当前上下文容器中判断是否存在
 		if (beanFactory.containsLocalBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME)) {
 			this.applicationEventMulticaster =
 					beanFactory.getBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class);
@@ -906,8 +909,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Publish early application events now that we finally have a multicaster...
 		Set<ApplicationEvent> earlyEventsToProcess = this.earlyApplicationEvents;
-		this.earlyApplicationEvents = null;
+		this.earlyApplicationEvents = null;   //设置为null，则后续的事件不再缓存，直接发送。即，此时的applicationEventMulticaster对象已经创建成功.
 		if (earlyEventsToProcess != null) {
+			// 发送缓存的早期事件
 			for (ApplicationEvent earlyEvent : earlyEventsToProcess) {
 				getApplicationEventMulticaster().multicastEvent(earlyEvent);
 			}
