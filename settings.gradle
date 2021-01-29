@@ -6,6 +6,12 @@ pluginManagement {
 }
 apply from: "$rootDir/gradle/build-cache-settings.gradle"
 
+plugins {
+	id "com.gradle.enterprise" version "3.5.1"
+	id "io.spring.ge.conventions" version "0.0.7"
+}
+
+
 include "spring-aop"
 include "spring-aspects"
 include "spring-beans"

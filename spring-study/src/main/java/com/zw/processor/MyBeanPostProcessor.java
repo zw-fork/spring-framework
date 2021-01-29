@@ -4,6 +4,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
+//在AbstractAutowireCapableBeanFactory.initializeBean()中执行
 @Component
 public class MyBeanPostProcessor implements BeanPostProcessor {
 

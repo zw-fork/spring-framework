@@ -16,11 +16,6 @@
 
 package org.springframework.context.annotation;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -39,6 +34,11 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
+
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Utility class that allows for convenient registration of common
@@ -153,12 +153,6 @@ public abstract class AnnotationConfigUtils {
 	public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 			BeanDefinitionRegistry registry, @Nullable Object source) {
 
-		logger.info("注册Spring内建Bean，ConfigurationClassPostProcessor");
-		logger.info("注册Spring内建Bean，AutowiredAnnotationBeanPostProcessor：用于处理@Autowired、@Value、 @Inject 依赖注入注解");
-		logger.info("注册Spring内建Bean，CommonAnnotationBeanPostProcessor： 用于处理@Resource、@PostConstruct、 @PreDestroy注解");
-		logger.info("注册Spring内建Bean，EventListenerMethodProcessor：");
-		logger.info("注册Spring内建Bean，DefaultEventListenerFactory：");
-
 		DefaultListableBeanFactory beanFactory = unwrapDefaultListableBeanFactory(registry);
 		if (beanFactory != null) {
 			if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
@@ -175,12 +169,17 @@ public abstract class AnnotationConfigUtils {
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
+			RootBeanDefinition  beanDefinition = (RootBeanDefinition)registry.getBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME);
+			logger.info(String.format("注册Spring内建Bean，%s. 用于处理@Configuration、@ComponentScan、@Import、@ImportResource", beanDefinition.getBeanClass().getSimpleName()));
 		}
 
 		if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME));
+
+			RootBeanDefinition  beanDefinition = (RootBeanDefinition)registry.getBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME);
+			logger.info(String.format("注册Spring内建Bean，%s：用于处理@Autowired、@Value、 @Inject 依赖注入注解", beanDefinition.getBeanClass().getSimpleName()));
 		}
 
 		// Check for JSR-250 support, and if present add the CommonAnnotationBeanPostProcessor.
@@ -188,6 +187,9 @@ public abstract class AnnotationConfigUtils {
 			RootBeanDefinition def = new RootBeanDefinition(CommonAnnotationBeanPostProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, COMMON_ANNOTATION_PROCESSOR_BEAN_NAME));
+
+			RootBeanDefinition  beanDefinition = (RootBeanDefinition)registry.getBeanDefinition(COMMON_ANNOTATION_PROCESSOR_BEAN_NAME);
+			logger.info(String.format("注册Spring内建Bean，%s：用于处理@Resource、@PostConstruct、 @PreDestroy注解", beanDefinition.getBeanClass().getSimpleName()));
 		}
 
 		// Check for JPA support, and if present add the PersistenceAnnotationBeanPostProcessor.
@@ -209,12 +211,18 @@ public abstract class AnnotationConfigUtils {
 			RootBeanDefinition def = new RootBeanDefinition(EventListenerMethodProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, EVENT_LISTENER_PROCESSOR_BEAN_NAME));
+
+			RootBeanDefinition  beanDefinition = (RootBeanDefinition)registry.getBeanDefinition(EVENT_LISTENER_PROCESSOR_BEAN_NAME);
+			logger.info(String.format("注册Spring内建Bean，%s：将ApplicationListener添加到context", beanDefinition.getBeanClass().getSimpleName()));
 		}
 
 		if (!registry.containsBeanDefinition(EVENT_LISTENER_FACTORY_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(DefaultEventListenerFactory.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, EVENT_LISTENER_FACTORY_BEAN_NAME));
+
+			RootBeanDefinition  beanDefinition = (RootBeanDefinition)registry.getBeanDefinition(EVENT_LISTENER_FACTORY_BEAN_NAME);
+			logger.info(String.format("注册Spring内建Bean，%s：创建ApplicationListener的工厂类", beanDefinition.getBeanClass().getSimpleName()));
 		}
 
 		return beanDefs;

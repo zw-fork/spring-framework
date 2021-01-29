@@ -1,6 +1,8 @@
 plugins {
 	id 'java'
 	id 'maven'
+	id "com.gradle.enterprise" version "3.5.1"
+	id "io.spring.ge.conventions" version "0.0.7"
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE' apply false
 	id 'org.jetbrains.kotlin.jvm' version '1.3.70' apply false
 	id 'org.jetbrains.dokka' version '0.9.18' apply false

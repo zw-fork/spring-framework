@@ -2,20 +2,14 @@ package com.zw.lifecycle;
 
 import lombok.Data;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -60,7 +54,12 @@ public class Person implements BeanFactoryAware, BeanNameAware, ApplicationConte
         System.out.println("【构造器】调用Person的构造器实例化: " + name);
     }
 
-    public String getName() {
+	public BeanFactory getBeanFactory2()
+	{
+		return beanFactory2;
+	}
+
+	public String getName() {
         return name;
     }
 
