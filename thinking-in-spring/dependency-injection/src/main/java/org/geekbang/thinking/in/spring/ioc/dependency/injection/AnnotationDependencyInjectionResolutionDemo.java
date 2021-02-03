@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +30,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 import javax.annotation.Resource;
-import javax.inject.Inject;
 import java.lang.annotation.Annotation;
 import java.util.*;
 
@@ -118,7 +117,7 @@ public class AnnotationDependencyInjectionResolutionDemo {
     private Optional<User> userOptional; // superUser
 
 	// 使用JSR330注解
-    @Inject
+   // @Inject
     private User injectedUser;
 
 	@Resource
@@ -145,7 +144,7 @@ public class AnnotationDependencyInjectionResolutionDemo {
         AutowiredAnnotationBeanPostProcessor beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
         // @Autowired + @Inject +  新注解 @InjectedUser
         Set<Class<? extends Annotation>> autowiredAnnotationTypes =
-                new LinkedHashSet<>(asList(Autowired.class, Inject.class, InjectedUser.class));
+                new LinkedHashSet<>(asList(Autowired.class, /*Inject.class, */InjectedUser.class));
         beanPostProcessor.setAutowiredAnnotationTypes(autowiredAnnotationTypes);
         return beanPostProcessor;
     }

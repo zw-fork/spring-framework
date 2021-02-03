@@ -12,5 +12,6 @@ repositories {
 }
 
 dependencies {
+    compile("javax.validation:validation-api")
     compile(project(":spring-context"))
 }

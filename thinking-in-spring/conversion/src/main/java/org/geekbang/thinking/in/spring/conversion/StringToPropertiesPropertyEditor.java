@@ -31,7 +31,7 @@ import java.util.Properties;
  */
 public class StringToPropertiesPropertyEditor extends PropertyEditorSupport implements PropertyEditor {
 
-    // 1. 实现 setAsText(String) 方法
+    // 1. 实现 setAsText(String) 方法。将字符串转换为properties
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
         // 2. 将 String 类型转换成 Properties 类型
@@ -48,6 +48,7 @@ public class StringToPropertiesPropertyEditor extends PropertyEditorSupport impl
         // next 获取临时 Properties 对象 #getValue();
     }
 
+    // 解析Properties，返回字符串
     @Override
     public String getAsText() {
         Properties properties = (Properties) getValue();

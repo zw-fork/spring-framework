@@ -34,7 +34,7 @@ public class CustomizedPropertyEditorRegistrar implements PropertyEditorRegistra
     @Override
     public void registerCustomEditors(PropertyEditorRegistry registry) {
         // 1. 通用类型转换
-        // 2. Java Bean 属性类型转换
+        // 2. Java Bean 属性类型转换。此处，针对User类中的context属性进行转换。
         registry.registerCustomEditor(User.class, "context", new StringToPropertiesPropertyEditor());
     }
 }

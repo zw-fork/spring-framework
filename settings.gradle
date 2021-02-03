@@ -52,10 +52,25 @@ findProject(':thinking-in-spring:spring-bean')?.name = 'spring-bean'
 include 'thinking-in-spring:dependency-source'
 findProject(':thinking-in-spring:dependency-source')?.name = 'dependency-source'
 
-//17_Spring 事件（Events）
+//13_Spring校验(Validation)
+include 'thinking-in-spring:validation'
+findProject(':thinking-in-spring:validation')?.name = 'validation'
+
+//14_Spring数据绑定
+include 'thinking-in-spring:data-binding'
+findProject(':thinking-in-spring:data-binding')?.name = 'data-binding'
+
+//15_Spring 类型转换（Type Conversion）
+include 'thinking-in-spring:conversion'
+findProject(':thinking-in-spring:conversion')?.name = 'conversion'
+
+//17_Spring事件(Events)
 include 'thinking-in-spring:event'
 findProject(':thinking-in-spring:event')?.name = 'event'
 
 //18_Spring注解
 include 'thinking-in-spring:annotation'
 findProject(':thinking-in-spring:annotation')?.name = 'annotation'
+
+
+

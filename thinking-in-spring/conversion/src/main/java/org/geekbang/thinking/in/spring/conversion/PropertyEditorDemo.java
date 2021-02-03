@@ -34,9 +34,9 @@ public class PropertyEditorDemo {
         String text = "name = 小马哥";
 
         PropertyEditor propertyEditor = new StringToPropertiesPropertyEditor();
-        // 传递 String 类型的内容
+        // 传递Properties类型的 String 类型的内容
         propertyEditor.setAsText(text);
-
+		System.out.println(propertyEditor.getValue().getClass());
         System.out.println(propertyEditor.getValue());
 
         System.out.println(propertyEditor.getAsText());

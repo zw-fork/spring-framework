@@ -277,6 +277,9 @@ configure(allprojects) { project ->
 			dependency "org.glassfish:javax.el:3.0.1-b08"
 			dependency "org.glassfish.main:javax.jws:4.0-b33"
 			dependency "org.glassfish.tyrus:tyrus-container-servlet:1.13.1"
+
+			dependency "org.hibernate:hibernate-validator:6.2.0.Final"
+			dependency "org.mortbay.jasper:apache-el:9.0.29"
 		}
 		generatedPomCustomization {
 			enabled = false

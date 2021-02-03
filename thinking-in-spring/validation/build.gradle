@@ -10,7 +10,11 @@ repositories {
 }
 
 dependencies {
+    compile("org.hibernate:hibernate-validator")
+    compile("javax.validation:validation-api")
+    compile("org.mortbay.jasper:apache-el")
     compile(project(":spring-context"))
+    compile(project(":thinking-in-spring:ioc-container-overview"))
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'

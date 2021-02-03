@@ -45,7 +45,7 @@ public class ErrorsMessageDemo {
         Errors errors = new BeanPropertyBindingResult(user, "user");
         // 2. 调用 reject 或 rejectValue
         // reject 生成 ObjectError
-        // reject 生成 FieldError
+        // rejectValue 生成 FieldError.
         errors.reject("user.properties.not.null");
         // user.name = user.getName()
         errors.rejectValue("name", "name.required");
@@ -56,7 +56,7 @@ public class ErrorsMessageDemo {
         List<FieldError> fieldErrors = errors.getFieldErrors();
         List<ObjectError> allErrors = errors.getAllErrors();
 
-        // 4. 通过 ObjectError 和 FieldError 中的 code 和 args 来关联 MessageSource 实现
+        // 4. 通过 ObjectError 和 FieldError 中的 code 和 args 来关联 MessageSource国际化实现
         MessageSource messageSource = createMessageSource();
 
         for (ObjectError error : allErrors) {

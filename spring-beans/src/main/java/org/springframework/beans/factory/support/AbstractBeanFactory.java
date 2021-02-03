@@ -1262,6 +1262,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		if (registrySupport != null) {
 			registrySupport.useConfigValueEditors();
 		}
+		// 注册用户自定义的PropertyEditorRegistrar
 		if (!this.propertyEditorRegistrars.isEmpty()) {
 			for (PropertyEditorRegistrar registrar : this.propertyEditorRegistrars) {
 				try {
