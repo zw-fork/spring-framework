@@ -550,7 +550,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Initialize event multicaster for this context.
 				//8. 初始化容器 事件传播器
-				logger.info("执行refresh#initApplicationEventMulticaster............");
+				logger.info("执行refresh#initApplicationEventMulticaster。初始化事件传播器applicationEventMulticaster...........");
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
@@ -559,7 +559,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				onRefresh();
 
 				// Check for listener beans and register them.
-				//10. 为事件传播器注册事件监听器
+				//10. 为事件传播器注册事件监听器。并发布事件
 				logger.info("执行refresh#registerListeners............");
 				registerListeners();
 
