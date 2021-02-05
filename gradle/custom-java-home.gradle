@@ -39,6 +39,7 @@ if (customJavaHome) {
 
 	tasks.withType(JavaCompile) {
 		logger.info("Java home for " + it.name + " task in " + project.name + ": " + customJavaHomeDir)
+		options.encoding = "UTF-8"
 		options.forkOptions.javaHome = customJavaHomeDir
 		inputs.property("customJavaHome", customJavaHome)
 		if (customJavaSourceVersion) {

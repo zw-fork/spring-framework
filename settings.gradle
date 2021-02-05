@@ -7,12 +7,6 @@ pluginManagement {
 }
 apply from: "$rootDir/gradle/build-cache-settings.gradle"
 
-plugins {
-	id "com.gradle.enterprise" version "3.5.1"
-	id "io.spring.ge.conventions" version "0.0.7"
-}
-
-
 include "spring-aop"
 include "spring-aspects"
 include "spring-beans"
@@ -70,6 +64,10 @@ findProject(':thinking-in-spring:data-binding')?.name = 'data-binding'
 include 'thinking-in-spring:conversion'
 findProject(':thinking-in-spring:conversion')?.name = 'conversion'
 
+////16_Spring 泛型处理（Generic Resolution）
+include 'thinking-in-spring:generic'
+findProject(':thinking-in-spring:generic')?.name = 'generic'
+
 //17_Spring事件(Events)
 include 'thinking-in-spring:event'
 findProject(':thinking-in-spring:event')?.name = 'event'
@@ -77,6 +75,5 @@ findProject(':thinking-in-spring:event')?.name = 'event'
 //18_Spring注解
 include 'thinking-in-spring:annotation'
 findProject(':thinking-in-spring:annotation')?.name = 'annotation'
-
 
 
