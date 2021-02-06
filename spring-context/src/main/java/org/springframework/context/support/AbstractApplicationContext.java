@@ -504,7 +504,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// 容器开始启动
 			// 获取BeanFactory（DefaultListableBeanFactory）；解析数据，创建BeanDefinition，并使用BeanDefinitionReaderUtils类，将其放入beanDefinitionMap保存的IOC容器
 
-			//创建BeanDefinition
+			//创建beanFactory，创建注册BeanDefinition到beanDefinitionMap
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -611,9 +611,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Switch to active.
 		// 启动时间
 		this.startupDate = System.currentTimeMillis();
-		// 此 context 是否已经被关闭
+
+		// 修改context状态标识
 		this.closed.set(false);
-		// active 表示这个 context 当前是否处于活跃状态
 		this.active.set(true);
 
 		if (logger.isDebugEnabled()) {
@@ -626,15 +626,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
+		// 初始化PropertySources
 		// 1.在 context 的 environment 中初始化占位符属性源
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		// 检验Environment中必须属性
 		// 验证所有被标记为必要的属性是否可解析，如果有遗失属性则不能解析并抛出异常，
 		// 可以参考setRequiredProperties方法
 		getEnvironment().validateRequiredProperties();
 
+		// 初始化事件监听器集合
 		// Store pre-refresh ApplicationListeners...
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
@@ -647,6 +650,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Allow for the collection of early ApplicationEvents,
 		// to be published once the multicaster is available...
+		// 初始化早期Spring事件集合
 		// 允许应用启动之前的事件，当multicaster一旦可用的时候，可立刻响应发布的事件。
 		this.earlyApplicationEvents = new LinkedHashSet<>();
 	}
