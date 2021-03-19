@@ -891,6 +891,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 
+		// 触发所有Bean的后期初始化(post-initialization)回调方法
 		// Trigger post-initialization callback for all applicable beans...
 		for (String beanName : beanNames) {
 			Object singletonInstance = getSingleton(beanName);
@@ -898,6 +899,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				final SmartInitializingSingleton smartSingleton = (SmartInitializingSingleton) singletonInstance;
 				if (System.getSecurityManager() != null) {
 					AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+						// 回调SmartInitializingSingleton实现类方法
 						smartSingleton.afterSingletonsInstantiated();
 						return null;
 					}, getAccessControlContext());
@@ -1247,7 +1249,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (result == null) {
 				result = doResolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter);
 			}
-			return result;  // 返回注入的Bean实例对象
+			return result;  // 返回依赖注入的Bean实例对象
 		}
 	}
 
@@ -1263,9 +1265,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 
 			Class<?> type = descriptor.getDependencyType();
+			//返回注解的value属性值。比如：${user.name}
 			Object value = getAutowireCandidateResolver().getSuggestedValue(descriptor);
+
+			// 处理@Value
 			if (value != null) {
 				if (value instanceof String) {
+					// 解析value属性值
 					String strVal = resolveEmbeddedValue((String) value);
 					BeanDefinition bd = (beanName != null && containsBean(beanName) ?
 							getMergedBeanDefinition(beanName) : null);
@@ -1282,6 +1288,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							converter.convertIfNecessary(value, type, descriptor.getMethodParameter()));
 				}
 			}
+
+			// 处理@Autowire
 
 			// 特殊类型处理：比如：Map、数组等
 			Object multipleBeans = resolveMultipleBeans(descriptor, beanName, autowiredBeanNames, typeConverter);
@@ -1326,6 +1334,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (autowiredBeanNames != null) {
 				autowiredBeanNames.add(autowiredBeanName);
 			}
+			// 依赖注入的对象还是Class，而不是Object，通过getBean获取Bean对象。比如：classRoom
 			if (instanceCandidate instanceof Class) {
 				instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, this);
 			}
@@ -1513,6 +1522,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 		for (String candidate : candidateNames) {
 			if (!isSelfReference(beanName, candidate) && isAutowireCandidate(candidate, descriptor)) {
+				//
 				addCandidateEntry(result, candidate, descriptor, requiredType);
 			}
 		}

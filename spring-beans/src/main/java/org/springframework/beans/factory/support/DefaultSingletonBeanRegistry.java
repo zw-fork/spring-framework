@@ -141,6 +141,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param singletonObject the singleton object
 	 */
 	protected void addSingleton(String beanName, Object singletonObject) {
+		if (beanName.equals("classRoom") || beanName.equals("students") || beanName.equals("student")) {
+			System.out.println();
+		}
 		synchronized (this.singletonObjects) {
 			logger.info("add singletonObjects: " + beanName);
 			this.singletonObjects.put(beanName, singletonObject);
@@ -161,8 +164,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param singletonFactory the factory for the singleton object
 	 */
 	protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
+		if (beanName.equals("classRoom") || beanName.equals("students") || beanName.equals("student")) {
+			System.out.println();
+		}
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
+			// 一级缓存不存在，表示beanName还没有创建或还没有创建成功
 			if (!this.singletonObjects.containsKey(beanName)) {
 				this.singletonFactories.put(beanName, singletonFactory);
 				this.earlySingletonObjects.remove(beanName);
@@ -195,6 +202,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		// 从一级缓存获取bean对象
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			if (beanName.equals("classRoom") || beanName.equals("students") || beanName.equals("student")) {
+				System.out.println();
+			}
 			synchronized (this.singletonObjects) {
 				// 从二级缓存获取早期暴露的对象(此时，对象还在创建)。
 				singletonObject = this.earlySingletonObjects.get(beanName);
@@ -202,6 +212,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					// 支持循环依赖，且二级缓存不存在时，则从三级缓存获取.同时，添加到二级缓存
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
+						//通过lamada表达式调用AbstractAutowireCapableBeanFactory.getEarlyBeanReference()方法
+						//返回还没完全初始化的早期Bean
 						singletonObject = singletonFactory.getObject();
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);

@@ -616,6 +616,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 	/**
 	 * Class representing injection information about an annotated field.
+	 * 处理字段注入
 	 */
 	private class AutowiredFieldElement extends InjectionMetadata.InjectedElement {
 
@@ -682,6 +683,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 	/**
 	 * Class representing injection information about an annotated method.
+	 * 处理方法注入
 	 */
 	private class AutowiredMethodElement extends InjectionMetadata.InjectedElement {
 
@@ -721,6 +723,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					currDesc.setContainingClass(bean.getClass());
 					descriptors[i] = currDesc;
 					try {
+						//
 						Object arg = beanFactory.resolveDependency(currDesc, beanName, autowiredBeans, typeConverter);
 						if (arg == null && !this.required) {
 							arguments = null;

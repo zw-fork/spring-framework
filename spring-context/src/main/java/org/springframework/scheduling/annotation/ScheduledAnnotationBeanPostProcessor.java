@@ -76,6 +76,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.util.StringValueResolver;
 
+// @Scheduled任务处理器
 /**
  * Bean post-processor that registers methods annotated with @{@link Scheduled}
  * to be invoked by a {@link org.springframework.scheduling.TaskScheduler} according
@@ -212,7 +213,7 @@ public class ScheduledAnnotationBeanPostProcessor
 		}
 	}
 
-
+	// DefaultListableBeanFactory.preInstantiateSingletons()初始化bean时回调SmartInitializingSingleton.afterSingletonsInstantiated()方法
 	@Override
 	public void afterSingletonsInstantiated() {
 		// Remove resolved singleton classes from cache
@@ -383,6 +384,7 @@ public class ScheduledAnnotationBeanPostProcessor
 			String errorMessage =
 					"Exactly one of the 'cron', 'fixedDelay(String)', or 'fixedRate(String)' attributes is required";
 
+			// 注册定时任务
 			Set<ScheduledTask> tasks = new LinkedHashSet<>(4);
 
 			// Determine initial delay

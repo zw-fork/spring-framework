@@ -173,6 +173,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	public AbstractAutowireCapableBeanFactory() {
 		super();
+		// 忽略指定Aware的自动注入(避免通过autowireByName 和 autowireByType 注入)。invokeAwareMethods()方法中通过set方法注入。
 		ignoreDependencyInterface(BeanNameAware.class);
 		ignoreDependencyInterface(BeanFactoryAware.class);
 		ignoreDependencyInterface(BeanClassLoaderAware.class);
@@ -625,6 +626,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
+			// 设置三级缓存
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
@@ -1044,7 +1046,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 			Object instance;
 			try {
-				// Mark this bean as currently in creation, even if just partially.
+				// Mark this bean as c+urrently in creation, even if just partially.
 				beforeSingletonCreation(beanName);
 				// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
 				instance = resolveBeforeInstantiation(beanName, mbd);

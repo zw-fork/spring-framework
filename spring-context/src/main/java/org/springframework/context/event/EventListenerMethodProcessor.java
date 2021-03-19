@@ -187,13 +187,13 @@ public class EventListenerMethodProcessor
 						if (factory.supportsMethod(method)) {
 							Method methodToUse = AopUtils.selectInvocableMethod(method, context.getType(beanName));
 
-							// 创建一个ApplicationListener对象，并将@EventListener注解的方法，作为处理事件的方法。
+							//利用工厂生成一个ApplicationListener对象，并将@EventListener注解的方法，作为处理事件的方法。
 							ApplicationListener<?> applicationListener =
 									factory.createApplicationListener(beanName, targetType, methodToUse);
 							if (applicationListener instanceof ApplicationListenerMethodAdapter) {
 								((ApplicationListenerMethodAdapter) applicationListener).init(context, this.evaluator);
 							}
-							// 将applicationListener添加到SimpleApplicationEventMulticaster对象。有事件发生时，
+							// 将applicationListener添加到SimpleApplicationEventMulticaster事件广播器对象。有事件发生时，
 							// SimpleApplicationEventMulticaster对象会进行广播，发送给满足条件的ApplicationListener对象执行
 							context.addApplicationListener(applicationListener);
 							break;

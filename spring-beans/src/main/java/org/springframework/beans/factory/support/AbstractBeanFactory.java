@@ -147,7 +147,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@Nullable
 	private TypeConverter typeConverter;
 
-	/** String resolvers to apply e.g. to annotation attribute values. */
+	/** String resolvers to apply e.g. to annotation attribute values.
+	 * 保存处理 注解中Value属性的对象
+	 *
+	 * */
 	private final List<StringValueResolver> embeddedValueResolvers = new CopyOnWriteArrayList<>();
 
 	/** BeanPostProcessors to apply in createBean. */

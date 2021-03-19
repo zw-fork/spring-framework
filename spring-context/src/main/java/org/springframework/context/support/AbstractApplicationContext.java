@@ -693,13 +693,20 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 		// Tell the internal bean factory to use the context's class loader etc.
+		// 关联ClassLoader。(自定义或Thread.currentThread().getContextClassLoader())
 		beanFactory.setBeanClassLoader(getClassLoader());
+		// 设置Bean表达式处理器
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
+		// 添加PropertyEditorRegistrar
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
 		logger.info("Configure the bean factory with context callbacks.");
+		// ApplicationContext
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+		// 忽略依赖接口.
+		// 忽略指定Aware的自动注入(避免通过autowireByName 和 autowireByType 注入)。
+		// ApplicationContextAwareProcessor中通过set方法注入
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
 		beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);
@@ -718,10 +725,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		logger.info("缓存Spring內建单例Bean对象，不能通过getBean()获取： BeanFactory、 ResourceLoader、 ApplicationEventPublisher、 ApplicationContext");
 
 		// Register early post-processor for detecting inner beans as ApplicationListeners.
+		// 将ApplicationListener添加到applicationEventMulticaster
 		beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(this));
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found.
 		if (beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
+			// 处理AOP
 			beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory));
 			// Set a temporary ClassLoader for type matching.
 			beanFactory.setTempClassLoader(new ContextTypeMatchClassLoader(beanFactory.getBeanClassLoader()));
@@ -729,6 +738,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		logger.info("通过beanFactory.registerSingleton配置单体Bean，缓存到singletonObjects Map集合。可以通过getBean获取： environment、systemProperties、systemEnvironment");
 		// Register default environment beans.
+		// 注册单例对象 - environment、Java System Properties以及OS环境变量
 		if (!beanFactory.containsLocalBean(ENVIRONMENT_BEAN_NAME)) {
 			// 将环境变量，注册为单例Bean
 			beanFactory.registerSingleton(ENVIRONMENT_BEAN_NAME, getEnvironment());
@@ -920,6 +930,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// (such as a PropertyPlaceholderConfigurer bean) registered any before:
 		// at this point, primarily for resolution in annotation attribute values.
 		if (!beanFactory.hasEmbeddedValueResolver()) {
+			//lambda表达式. 创建StringValueResolver匿名对象，实现resolveStringValue()方法。从Environment中获取数据
 			beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().resolvePlaceholders(strVal));
 		}
 

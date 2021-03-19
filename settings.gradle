@@ -75,5 +75,13 @@ findProject(':thinking-in-spring:event')?.name = 'event'
 //18_Spring注解
 include 'thinking-in-spring:annotation'
 findProject(':thinking-in-spring:annotation')?.name = 'annotation'
+include 'thinking-in-spring:questions'
+findProject(':thinking-in-spring:questions')?.name = 'questions'
 
+include 'thinking-in-spring:environment'
+findProject(':thinking-in-spring:environment')?.name = 'environment'
+include 'thinking-in-spring:resource'
+findProject(':thinking-in-spring:resource')?.name = 'resource'
+include 'thinking-in-spring:aop-overview'
+findProject(':thinking-in-spring:aop-overview')?.name = 'aop-overview'
 
