@@ -42,6 +42,9 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, BeforeA
 
 
 	/**
+	 * advice参数
+	 * 1) MethodBeforeAdvice标准实现
+	 * 2) AspectJ实现：AspectJMethodBeforeAdvice。如对AspectConfiguration2进行封装
 	 * Create a new MethodBeforeAdviceInterceptor for the given advice.
 	 * @param advice the MethodBeforeAdvice to wrap
 	 */

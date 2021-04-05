@@ -106,22 +106,24 @@ public class ComposablePointcut implements Pointcut, Serializable {
 
 
 	/**
+	 * 取并集。即，this.classFilter和other的matches()满足一个就可以
 	 * Apply a union with the given ClassFilter.
 	 * @param other the ClassFilter to apply a union with
 	 * @return this composable pointcut (for call chaining)
 	 */
 	public ComposablePointcut union(ClassFilter other) {
-		this.classFilter = ClassFilters.union(this.classFilter, other);
+		this.classFilter = ClassFilters.union(this.classFilter, other);  //this.classFilter = UnionClassFilter
 		return this;
 	}
 
 	/**
+	 * 取交集。即，this.classFilter和other的matches()都要返回true
 	 * Apply an intersection with the given ClassFilter.
 	 * @param other the ClassFilter to apply an intersection with
 	 * @return this composable pointcut (for call chaining)
 	 */
 	public ComposablePointcut intersection(ClassFilter other) {
-		this.classFilter = ClassFilters.intersection(this.classFilter, other);
+		this.classFilter = ClassFilters.intersection(this.classFilter, other);   //this.classFilter = IntersectionClassFilter
 		return this;
 	}
 

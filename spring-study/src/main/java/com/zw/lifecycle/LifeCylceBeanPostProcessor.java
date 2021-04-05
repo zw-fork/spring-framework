@@ -10,7 +10,7 @@ public class LifeCylceBeanPostProcessor implements BeanPostProcessor, Ordered {
 
     public LifeCylceBeanPostProcessor() {
         super();
-        System.out.println("BeanPostProcessor -> Bean后置处理器创建完成！！");
+        System.out.println("BeanPostProcessor -> Bean后置处理器构造方法创建完成！！");
         // TODO Auto-generated constructor stub
     }
 
@@ -19,7 +19,7 @@ public class LifeCylceBeanPostProcessor implements BeanPostProcessor, Ordered {
             throws BeansException {
 		if (arg0 instanceof Person) {
 			System.out
-					.println("BeanPostProcessor接口方法postProcessAfterInitialization对属性进行更改！ -> 在afterPropertiesSet和init-method之前执行");
+					.println("BeanPostProcessor接口方法postProcessAfterInitialization对属性进行更改！ -> 在afterPropertiesSet和init-method之后执行");
 		}
         return arg0;
     }
@@ -29,7 +29,7 @@ public class LifeCylceBeanPostProcessor implements BeanPostProcessor, Ordered {
             throws BeansException {
     	if (arg0 instanceof Person) {
 			System.out
-					.println("BeanPostProcessor接口方法postProcessBeforeInitialization对属性进行更改！ -> 在afterPropertiesSet和init-method之后执行");
+					.println("BeanPostProcessor接口方法postProcessBeforeInitialization对属性进行更改！ -> 在afterPropertiesSet和init-method之前执行");
 		}
         return arg0;
     }

@@ -30,6 +30,10 @@ import javax.annotation.PreDestroy;
  */
 public class DefaultUserFactory implements UserFactory, InitializingBean, DisposableBean {
 
+	public DefaultUserFactory() {
+		System.out.println("执行构造方法....");
+	}
+
     // 1. 基于 @PostConstruct 注解
     @PostConstruct
     public void init() {
@@ -37,7 +41,7 @@ public class DefaultUserFactory implements UserFactory, InitializingBean, Dispos
     }
 
     public void initUserFactory() {
-        System.out.println("自定义初始化方法 initUserFactory() : UserFactory 初始化中...");
+        System.out.println("@Bean中initMethod属性添加的自定义初始化方法 initUserFactory() : UserFactory 初始化中...");
     }
 
     @Override
@@ -56,7 +60,7 @@ public class DefaultUserFactory implements UserFactory, InitializingBean, Dispos
     }
 
     public void doDestroy() {
-        System.out.println("自定义销毁方法 doDestroy() : UserFactory 销毁中...");
+        System.out.println("@Bean中doDestroy属性添加的自定义销毁方法 doDestroy() : UserFactory 销毁中...");
     }
 
     @Override

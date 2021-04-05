@@ -16,8 +16,9 @@
  */
 package org.geekbang.thinking.in.spring.bean.definition;
 
+import org.geekbang.thinking.in.spring.bean.factory.UserFactory;
 import org.geekbang.thinking.in.spring.ioc.overview.domain.User;
-import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.serviceloader.ServiceLoaderFactoryBean;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -27,10 +28,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.Map;
-
-import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
 /**
  * 注解 BeanDefinition 示例
@@ -42,6 +41,14 @@ import static org.springframework.beans.factory.support.BeanDefinitionBuilder.ge
 @Import(AnnotationBeanDefinitionDemo.Config.class)
 public class AnnotationBeanDefinitionDemo {
 
+	@Bean
+	public ServiceLoaderFactoryBean userFactoryServiceLoader() {
+		ServiceLoaderFactoryBean serviceLoaderFactoryBean = new ServiceLoaderFactoryBean();
+		serviceLoaderFactoryBean.setServiceType(UserFactory.class);
+		return serviceLoaderFactoryBean;
+	}
+
+
     public static void main(String[] args) {
         // 创建 BeanFactory 容器
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
@@ -50,13 +57,14 @@ public class AnnotationBeanDefinitionDemo {
         // 注册 Configuration Class（配置类）
         applicationContext.register(AnnotationBeanDefinitionDemo.class);   // 注册AnnotationBeanDefinitionDemo Bean定义
 
+
         // 注册BeanDefinition方法二：指定名称
         // 通过 BeanDefinition 注册 API 实现
         // 1.命名 Bean 的注册方式,
         registerUserBeanDefinition(applicationContext, "mercyblitz-user");
 
         // 注册BeanDefinition方法三：使用默认命名方法
-        // 2. 非命名 Bean 的注册方法
+        // 2. 非命名(默认名称) Bean 的注册方法
 		// Bean名称默认格式为： org.geekbang.thinking.in.spring.ioc.overview.domain.User#0
         registerUserBeanDefinition(applicationContext);
         // Bean名称默认格式为： org.geekbang.thinking.in.spring.ioc.overview.domain.User#1
@@ -64,7 +72,14 @@ public class AnnotationBeanDefinitionDemo {
 
 		// 启动 Spring 应用上下文。 注册依赖的Bean定义
         applicationContext.refresh();
-
+		ServiceLoader<UserFactory> serviceLoader = applicationContext.getBean("userFactoryServiceLoader", ServiceLoader.class);
+		Iterator<UserFactory> iterator = serviceLoader.iterator();
+		while (iterator.hasNext()) {
+			UserFactory userFactory = iterator.next();
+			System.out.println(userFactory.getClass());
+			// 创建实例对象
+			System.out.println(userFactory.createUser().hashCode());
+		}
         // 按照类型依赖查找
         System.out.printf("Config 类型的所有 Beans(size=%s): %s\n", applicationContext.getBeansOfType(Config.class).size(), applicationContext.getBeansOfType(Config.class));
         System.out.printf("User 类型的所有 Beans(size=%s): %s\n", applicationContext.getBeansOfType(User.class).size(), applicationContext.getBeansOfType(User.class).keySet());
@@ -74,7 +89,7 @@ public class AnnotationBeanDefinitionDemo {
     }
 
     public static void registerUserBeanDefinition(BeanDefinitionRegistry registry, String beanName) {
-        BeanDefinitionBuilder beanDefinitionBuilder = genericBeanDefinition(User.class);
+        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(User.class);
         beanDefinitionBuilder
                 .addPropertyValue("id", System.currentTimeMillis())
                 .addPropertyValue("name", "小马哥");

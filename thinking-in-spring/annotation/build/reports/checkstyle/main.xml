@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.22">
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\AttributeOverridesDemo.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\ComponentScanDemo.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\EnableHelloWorld.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\EnableModuleDemo.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\EvenProfileCondition.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\HelloWorldConfiguration.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\HelloWorldImportBeanDefinitionRegistrar.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\HelloWorldImportSelector.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\MyComponent.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\MyComponent2.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\MyComponentScan.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\MyComponentScan2.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\ProfileDemo.java">
+</file>
+<file name="G:\github\framework\spring-framework\thinking-in-spring\annotation\src\main\java\org\geekbang\thinking\in\spring\annotation\TestClass.java">
+</file>
+</checkstyle>

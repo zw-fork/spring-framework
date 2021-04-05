@@ -207,14 +207,19 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private ConstructorArgumentValues constructorArgumentValues;
 
+	/**
+	 * 封装了PropertyValue的集合对象. 即，Bean中的属性
+	 */
 	@Nullable
 	private MutablePropertyValues propertyValues;
 
 	private MethodOverrides methodOverrides = new MethodOverrides();
 
+	// @Bean中initMethod属性
 	@Nullable
 	private String initMethodName;
 
+	// @Bean中doDestroy属性
 	@Nullable
 	private String destroyMethodName;
 

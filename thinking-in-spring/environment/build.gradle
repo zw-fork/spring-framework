@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group 'io.spring.asciidoctor'
+version '5.2.2.RELEASE'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile(project(":thinking-in-spring:ioc-container-overview"))
+    compile(project(":spring-context"))
+    compile(project(":spring-beans"))
+    compile(project(":spring-core"))
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
+}

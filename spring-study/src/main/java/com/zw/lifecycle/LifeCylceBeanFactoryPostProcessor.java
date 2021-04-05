@@ -11,14 +11,14 @@ public class LifeCylceBeanFactoryPostProcessor implements BeanFactoryPostProcess
 
     public LifeCylceBeanFactoryPostProcessor() {
         super();
-        System.out.println("BeanFactoryPostProcessor->BeanFactory后置处理器创建完成！！");
+        System.out.println("BeanFactoryPostProcessor->BeanFactory后置处理器构造方法创建完成！！");
     }
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory arg0)
             throws BeansException {
         System.out
-                .println("BeanFactoryPostProcessor调用postProcessBeanFactory方法：修改Bean定义参数");
+                .println("BeanFactoryPostProcessor调用postProcessBeanFactory方法：修改BeanDefine参数");
         BeanDefinition bd = arg0.getBeanDefinition("person");
         bd.getPropertyValues().addPropertyValue("phone", "110");
     }

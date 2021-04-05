@@ -50,7 +50,7 @@ public class BeanInitializationDemo {
         System.out.println("Spring 应用上下文已启动...");
         // 依赖查找 UserFactory.  @Lazy，使Bean初始化发生在getBean()方法调用时
         UserFactory userFactory = applicationContext.getBean(UserFactory.class);
-        System.out.println(userFactory);
+    //    System.out.println(userFactory);
         System.out.println("Spring 应用上下文准备关闭...");
         // 关闭 Spring 应用上下文
         applicationContext.close();

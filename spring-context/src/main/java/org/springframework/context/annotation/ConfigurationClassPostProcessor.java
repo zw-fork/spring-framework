@@ -406,6 +406,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	}
 
 	/**
+	 * 对@Configuration类进行字节码增强。
+	 * 例如：类似SpringConfig$$EnhancerBySpringCGLIB$$47a5de53@11935e这样的实例，这明显就是被CGLIB代理过的。
 	 * Post-processes a BeanFactory in search of Configuration class BeanDefinitions;
 	 * any candidates are then enhanced by a {@link ConfigurationClassEnhancer}.
 	 * Candidate status is determined by BeanDefinition attribute metadata.

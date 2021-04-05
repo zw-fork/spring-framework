@@ -81,7 +81,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 	 * @see #isEligibleBean
 	 */
 	public List<Advisor> buildAspectJAdvisors() {
-		List<String> aspectNames = this.aspectBeanNames;
+		List<String> aspectNames = this.aspectBeanNames;  // 获取副本
 
 		if (aspectNames == null) {
 			synchronized (this) {

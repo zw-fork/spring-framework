@@ -5,11 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AppConfig {
+public class EnableConfig {
 
     @Bean
     public Person enablePerson() {
-		Person studentBean = new Person();
+		Person studentBean = new Person("zw");
         studentBean.setName("enable person");
         return studentBean;
     }

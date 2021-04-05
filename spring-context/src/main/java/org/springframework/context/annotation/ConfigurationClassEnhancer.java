@@ -56,6 +56,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * 用于字节码增强
  * Enhances {@link Configuration} classes by generating a CGLIB subclass which
  * interacts with the Spring container to respect bean scoping semantics for
  * {@code @Bean} methods. Each such {@code @Bean} method will be overridden in

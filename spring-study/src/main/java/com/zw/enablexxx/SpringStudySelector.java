@@ -13,7 +13,7 @@ public class SpringStudySelector implements ImportSelector, BeanFactoryAware {
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
         importingClassMetadata.getAnnotationTypes().forEach(System.out::println);
         System.out.println(beanFactory);
-        return new String[]{AppConfig.class.getName()};
+        return new String[]{EnableConfig.class.getName()};
     }
 
     @Override

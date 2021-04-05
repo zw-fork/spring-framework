@@ -564,8 +564,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
-				//11. 初始化所有剩余的非延迟的(@Lazy)单例Bean。比如：配置文件中@Bean。将其加入singletonObjects一级缓存
-				// 初始化自己项目中的非延迟的Bean对象。实例化ConversionService的Bean对象
+				//11. 注册所有剩余的非延迟的(@Lazy)单例Bean。比如：配置文件中@Bean。将其加入singletonObjects一级缓存
+				// 注册自己项目中的非延迟的Bean对象。实例化ConversionService的Bean对象
 				logger.info("执行refresh#finishBeanFactoryInitialization............");
 				finishBeanFactoryInitialization(beanFactory);
 

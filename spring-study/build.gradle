@@ -12,6 +12,8 @@ repositories {
 }
 
 dependencies {
+    compile("org.slf4j:slf4j-api")
+    compile("org.slf4j:slf4j-simple")
     compile("javax.validation:validation-api")
     compile(project(":spring-context"))
     compile(project(":spring-beans"))

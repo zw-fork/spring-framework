@@ -28,6 +28,8 @@ public class UserHolder {
 
     private User user;
 
+    private int age;
+
     public UserHolder() {
     }
 
@@ -43,10 +45,19 @@ public class UserHolder {
         this.user = user;
     }
 
-    @Override
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	@Override
     public String toString() {
         return "UserHolder{" +
                 "user=" + user +
+				", age=" + age +
                 '}';
     }
 }

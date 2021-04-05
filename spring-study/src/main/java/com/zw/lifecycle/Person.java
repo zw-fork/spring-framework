@@ -47,7 +47,7 @@ public class Person implements BeanFactoryAware, BeanNameAware, ApplicationConte
 	private ApplicationEventPublisher applicationEventPublisher;
 
     static {
-		System.out.println("Person进行初始化...");
+		System.out.println("Person进行初始化(静态块)...");
 	}
 
     public Person(String name) {

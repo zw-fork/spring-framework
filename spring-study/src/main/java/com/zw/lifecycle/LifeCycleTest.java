@@ -30,8 +30,8 @@ public class LifeCycleTest {
 
 		System.out.println();
 		System.out.println("..................现在开始关闭容器！..................");
-		context.registerShutdownHook();
-
+		//context.registerShutdownHook();
+		context.close();
 		System.out.println("################ 实例化、初始化bean完成");
 		System.out.println("****************下面输出结果");
 	//	System.out.println("描述：" + bean.getDesc());
