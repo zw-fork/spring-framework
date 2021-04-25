@@ -536,6 +536,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			 * 为什么不能生成代理对象？因为真实的对象还没有生成，所以在这里不会生成代理对象，
 			 * 那么在这一步是我们aop和事务的关键，因为在这里解析我们的aop切面信息进行缓存
 			 *
+			 *  如果类需要被代理，会调用AspectJAwareAdvisorAutoProxyCreator的postProcessBeforeInstantiation()缓存需要代理类的Class对象，以便后续从缓存判断，生成代理Bean
 			 */
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
@@ -638,6 +639,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			//赋值：依赖注入，给我们的属性进行赋值(调用set)
 			populateBean(beanName, mbd, instanceWrapper);
 			// 进行对象初始化操作(在这里可能生成代理对象)
+			// AbstractAutoProxyCreator.postProcessAfterInitialization()判断Bean是否需要被代理，如果需要会返回被代理对象
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {

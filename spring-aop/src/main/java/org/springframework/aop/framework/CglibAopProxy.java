@@ -674,6 +674,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 				// Get as late as possible to minimize the time we "own" the target, in case it comes from a pool...
 				target = targetSource.getTarget();
 				Class<?> targetClass = (target != null ? target.getClass() : null);
+				//  获取当前拦截方法的Advice通知处理链
 				List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 				Object retVal;
 				// Check whether we only have one InvokerInterceptor: that is,
@@ -687,11 +688,11 @@ class CglibAopProxy implements AopProxy, Serializable {
 					retVal = methodProxy.invoke(target, argsToUse);
 				}
 				else {
-					// We need to create a method invocation...
+					// We need to create a method invocation... 执行拦截处理
 					retVal = new CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();
 				}
 				retVal = processReturnType(proxy, target, method, retVal);
-				return retVal;
+				return retVal;  //返回拦截方法执行后的结果。
 			}
 			finally {
 				if (target != null && !targetSource.isStatic()) {
@@ -727,7 +728,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 	private static class CglibMethodInvocation extends ReflectiveMethodInvocation {
 
 		@Nullable
-		private final MethodProxy methodProxy;
+		private final MethodProxy methodProxy;  //被拦截的方法
 
 		public CglibMethodInvocation(Object proxy, @Nullable Object target, Method method,
 				Object[] arguments, @Nullable Class<?> targetClass,

@@ -50,10 +50,11 @@ public class AfterReturningAdviceInterceptor implements MethodInterceptor, After
 		this.advice = advice;
 	}
 
-
+	// AfterReturningAdviceInterceptor为Advice通知的最后一级，直接返回结果。不再调用mi.process()
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
-		Object retVal = mi.proceed();
+		Object retVal = mi.proceed();   // 先执行后面的拦截方法。返回joinPoint结果
+		// 拦截方法执行完后，最后调用后置通知，并返回结果
 		this.advice.afterReturning(retVal, mi.getMethod(), mi.getArguments(), mi.getThis());
 		return retVal;
 	}

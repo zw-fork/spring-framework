@@ -240,6 +240,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		return wrapIfNecessary(bean, beanName, cacheKey);
 	}
 
+	//Aware回调. 将AOP Class存放到advisedBeans集合中
 	@Override
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
 		Object cacheKey = getCacheKey(beanClass, beanName);
@@ -325,6 +326,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
+	 * 判断当前bean是否需要代理，如果需要，则返回被代理对象
 	 * Wrap the given bean if necessary, i.e. if it is eligible for being proxied.
 	 * @param bean the raw bean instance
 	 * @param beanName the name of the bean
@@ -335,9 +337,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (StringUtils.hasLength(beanName) && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
-		// 判断是否需要进行代理
+		// 判断是否需要进行代理。被代理对象，值为true
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
-			return bean;
+			return bean;  //返回@Aspect Bean
 		}
 		/**
 		 * 判断是否是一些InfrastructureClass或者是否应该跳过这个Bean。
@@ -349,17 +351,17 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			return bean;
 		}
 
-		// 获取这个bean的advice
+		// 获取这个bean的advice，即当前Bean会有多少Advice通知拦截
 		// 扫描所有相关的方法(PointCut原始方法，哪些方法需要被代理)
 		// Create proxy if we have advice.
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
-			// 创建代理
+			// 创建代理。 如果该类有方法被@Aspect注解的类连接，则生成代理对象。如：AspectJAnnotatedPointcutDemo.java
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
 			this.proxyTypes.put(cacheKey, proxy.getClass());
-			return proxy;
+			return proxy;  //返回被代理对象
 		}
 
 		this.advisedBeans.put(cacheKey, Boolean.FALSE);
@@ -455,7 +457,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
 		}
 
-		ProxyFactory proxyFactory = new ProxyFactory();
+		ProxyFactory proxyFactory = new ProxyFactory();  //创建代理工厂
 		proxyFactory.copyFrom(this);
 
 		if (!proxyFactory.isProxyTargetClass()) {

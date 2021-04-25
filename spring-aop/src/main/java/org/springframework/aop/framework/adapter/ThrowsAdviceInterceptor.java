@@ -78,6 +78,7 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 
 		Method[] methods = throwsAdvice.getClass().getMethods();
 		for (Method method : methods) {
+			// 当处理异常的Advice对象中存在名称为afterThrowing的方法，且方法参数满足要求。则，添加到exceptionHandlerMap集合，用于处理拦截的方法抛出的异常
 			if (method.getName().equals(AFTER_THROWING) &&
 					(method.getParameterCount() == 1 || method.getParameterCount() == 4)) {
 				Class<?> throwableParam = method.getParameterTypes()[method.getParameterCount() - 1];
@@ -132,8 +133,8 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 			logger.trace("Trying to find handler for exception of type [" + exceptionClass.getName() + "]");
 		}
 		Method handler = this.exceptionHandlerMap.get(exceptionClass);
-		while (handler == null && exceptionClass != Throwable.class) {
-			exceptionClass = exceptionClass.getSuperclass();
+		while (handler == null && exceptionClass != Throwable.class) {  //递归查找
+			exceptionClass = exceptionClass.getSuperclass();  //查找exceptionClass的父类
 			handler = this.exceptionHandlerMap.get(exceptionClass);
 		}
 		if (handler != null && logger.isTraceEnabled()) {

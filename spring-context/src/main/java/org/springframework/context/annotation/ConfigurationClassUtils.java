@@ -65,7 +65,7 @@ abstract class ConfigurationClassUtils {
 
 	private static final Set<String> candidateIndicators = new HashSet<>(8);
 
-	static {
+	static {    //不会对其生成CGLIB代理Class
 		candidateIndicators.add(Component.class.getName());
 		candidateIndicators.add(ComponentScan.class.getName());
 		candidateIndicators.add(Import.class.getName());

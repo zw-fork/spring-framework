@@ -56,6 +56,9 @@ import org.springframework.lang.Nullable;
 public interface TransactionDefinition {
 
 	/**
+	 * 事务的7中传播级别
+	 */
+	/**
 	 * 支持一个已经存在的事务。如果不存在，则开启一个新的事务
 	 * Support a current transaction; create a new one if none exists.
 	 * Analogous to the EJB transaction attribute of the same name.

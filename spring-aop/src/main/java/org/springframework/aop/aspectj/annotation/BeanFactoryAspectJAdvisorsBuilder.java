@@ -45,9 +45,9 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 	private final AspectJAdvisorFactory advisorFactory;
 
 	@Nullable
-	private volatile List<String> aspectBeanNames;
+	private volatile List<String> aspectBeanNames;  //缓存@Aspect注解的Bean名称
 
-	private final Map<String, List<Advisor>> advisorsCache = new ConcurrentHashMap<>();
+	private final Map<String, List<Advisor>> advisorsCache = new ConcurrentHashMap<>();  //缓存指定@Aspect注解Bean下所有通知，如@Around、@Before、@After、@AfterReturning、@AfterThrowing
 
 	private final Map<String, MetadataAwareAspectInstanceFactory> aspectFactoryCache = new ConcurrentHashMap<>();
 
@@ -80,7 +80,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 	 * @return the list of {@link org.springframework.aop.Advisor} beans
 	 * @see #isEligibleBean
 	 */
-	public List<Advisor> buildAspectJAdvisors() {
+	public List<Advisor> buildAspectJAdvisors() {   //获取所有@Aspect注解的Bean名称保存到aspectBeanNames；解析Advisor通知对象，保存到advisorsCache
 		List<String> aspectNames = this.aspectBeanNames;  // 获取副本
 
 		if (aspectNames == null) {
@@ -107,7 +107,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 							if (amd.getAjType().getPerClause().getKind() == PerClauseKind.SINGLETON) {
 								MetadataAwareAspectInstanceFactory factory =
 										new BeanFactoryAspectInstanceFactory(this.beanFactory, beanName);
-								List<Advisor> classAdvisors = this.advisorFactory.getAdvisors(factory);
+								List<Advisor> classAdvisors = this.advisorFactory.getAdvisors(factory);   //根据Bean名称，获取Advisor集合
 								if (this.beanFactory.isSingleton(beanName)) {
 									this.advisorsCache.put(beanName, classAdvisors);
 								}

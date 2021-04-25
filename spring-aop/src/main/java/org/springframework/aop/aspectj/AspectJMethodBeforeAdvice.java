@@ -23,6 +23,7 @@ import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.lang.Nullable;
 
 /**
+ * AspectJ 前置处理器
  * Spring AOP advice that wraps an AspectJ before method.
  *
  * @author Rod Johnson
