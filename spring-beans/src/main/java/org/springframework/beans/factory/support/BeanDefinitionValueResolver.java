@@ -112,7 +112,7 @@ class BeanDefinitionValueResolver {
 		// to another bean to be resolved.
 		if (value instanceof RuntimeBeanReference) {
 			RuntimeBeanReference ref = (RuntimeBeanReference) value;
-			// 调用引用类型属性的解析方法
+			// TODO 调用引用类型属性的解析方法。进行依赖注入
 			return resolveReference(argName, ref);
 		}
 		// 对属性值是引用容器中另一个Bean，进行处理
@@ -338,6 +338,7 @@ class BeanDefinitionValueResolver {
 				}
 				else {
 					resolvedName = String.valueOf(doEvaluate(ref.getBeanName()));
+					// TODO  从三级缓存获取依赖的Bean。如果不存在，会进行创建
 					bean = this.beanFactory.getBean(resolvedName);
 				}
 				this.beanFactory.registerDependentBean(resolvedName, this.beanName);

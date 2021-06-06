@@ -64,7 +64,7 @@ public class Person implements BeanFactoryAware, BeanNameAware, ApplicationConte
     }
 
     public void setName(String name) {
-        System.out.println("【注入属性】注入属性name: " + name);
+        System.out.println("【注入属性】注入属性person.name: " + name);
         this.name = name;
     }
 
@@ -73,7 +73,7 @@ public class Person implements BeanFactoryAware, BeanNameAware, ApplicationConte
     }
 
     public void setAddress(String address) {
-        System.out.println("【注入属性】注入属性address");
+        System.out.println("【注入属性】注入属性person.address");
         this.address = address;
     }
 
@@ -82,7 +82,7 @@ public class Person implements BeanFactoryAware, BeanNameAware, ApplicationConte
     }
 
     public void setPhone(int phone) {
-        System.out.println("【注入属性】注入属性phone: " + phone);
+        System.out.println("【注入属性】注入属性person.phone: " + phone);
         this.phone = phone;
     }
 

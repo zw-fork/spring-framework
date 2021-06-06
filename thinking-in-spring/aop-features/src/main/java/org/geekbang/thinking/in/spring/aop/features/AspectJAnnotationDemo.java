@@ -25,9 +25,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since
  */
-//@Aspect        // 声明为 Aspect 切面
+@Aspect        // 声明为 Aspect 切面
 @Configuration // Configuration class
-//@EnableAspectJAutoProxy // 激活 Aspect 注解自动代理
+@EnableAspectJAutoProxy // 激活 Aspect 注解自动代理
 public class AspectJAnnotationDemo {
 
     public static void main(String[] args) {

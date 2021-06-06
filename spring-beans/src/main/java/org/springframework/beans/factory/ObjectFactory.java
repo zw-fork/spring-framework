@@ -37,7 +37,7 @@ import org.springframework.beans.BeansException;
  * @see FactoryBean
  */
 @FunctionalInterface
-public interface ObjectFactory<T> {
+public interface ObjectFactory<T> {  //对象工厂。通过调用getObject()获取具体的Bean
 
 	/**
 	 * Return an instance (possibly shared or independent)

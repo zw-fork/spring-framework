@@ -235,8 +235,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 	@Override
 	public Object getEarlyBeanReference(Object bean, String beanName) {
+		// 缓存当前bean，表示该bean被提前代理了
 		Object cacheKey = getCacheKey(bean.getClass(), beanName);
 		this.earlyProxyReferences.put(cacheKey, bean);
+		// 对bean进行提前Spring AOP代理
 		return wrapIfNecessary(bean, beanName, cacheKey);
 	}
 
@@ -282,6 +284,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		return pvs;
 	}
 
+	// TODO
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) {
 		return bean;
@@ -296,7 +299,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {
 		if (bean != null) {
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
-			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
+			// earlyProxyReferences集合缓存早期已经被代理的bean对象
+			// 如果存在循环依赖。则调用三级缓存时AbstractAutoProxyCreator.getEarlyBeanReference()，会将bean存入earlyProxyReferences
+			if (this.earlyProxyReferences.remove(cacheKey) != bean) { //bean没有被代理，则创建代理对象
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
 		}
@@ -351,7 +356,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			return bean;
 		}
 
-		// 获取这个bean的advice，即当前Bean会有多少Advice通知拦截
+		// 获取这个bean的advice通知，即当前Bean会有多少Advice通知拦截
 		// 扫描所有相关的方法(PointCut原始方法，哪些方法需要被代理)
 		// Create proxy if we have advice.
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
@@ -440,6 +445,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
+	 * 创建AOP代理类
 	 * Create an AOP proxy for the given bean.
 	 * @param beanClass the class of the bean
 	 * @param beanName the name of the bean
@@ -470,7 +476,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
-		proxyFactory.addAdvisors(advisors);
+		proxyFactory.addAdvisors(advisors);  //为代理过程添加Advisor通知
 		proxyFactory.setTargetSource(targetSource);
 		customizeProxyFactory(proxyFactory);
 
@@ -478,8 +484,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (advisorsPreFiltered()) {
 			proxyFactory.setPreFiltered(true);
 		}
-
-		return proxyFactory.getProxy(getProxyClassLoader());
+		// 默认一般为：CglibAopProxy.getProxy(java.lang.ClassLoader)
+		return proxyFactory.getProxy(getProxyClassLoader());  //创建代理对象
 	}
 
 	/**

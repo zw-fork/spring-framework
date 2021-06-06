@@ -48,7 +48,7 @@ public class IntroductionAdvisorDemo implements EchoService, Comparable<Introduc
             public void before(Method method, Object[] args, Object target) throws Throwable {
                 System.out.println("BeforeAdvice : " + method);
             }
-        }, new IntroductionInfo() {
+        }, new IntroductionInfo() {  //限制需要代理的接口。为代理对象扩展了Map接口
             @Override
             public Class<?>[] getInterfaces() {
                 return new Class[]{EchoService.class, Map.class};
@@ -65,6 +65,7 @@ public class IntroductionAdvisorDemo implements EchoService, Comparable<Introduc
 
         map.put("1", "A");
 
+        //IntroductionInfo指定了该接口不进行代理，即方法不会被代理
         Comparable comparable = (Comparable) proxy;
         comparable.compareTo(null);
 

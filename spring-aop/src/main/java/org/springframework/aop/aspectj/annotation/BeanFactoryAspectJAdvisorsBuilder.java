@@ -80,7 +80,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 	 * @return the list of {@link org.springframework.aop.Advisor} beans
 	 * @see #isEligibleBean
 	 */
-	public List<Advisor> buildAspectJAdvisors() {   //获取所有@Aspect注解的Bean名称保存到aspectBeanNames；解析Advisor通知对象，保存到advisorsCache
+	public List<Advisor> buildAspectJAdvisors() {   //获取所有@Aspect注解的Bean名称保存到aspectBeanNames；获取Advisor通知对象，保存到advisorsCache
 		List<String> aspectNames = this.aspectBeanNames;  // 获取副本
 
 		if (aspectNames == null) {

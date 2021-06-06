@@ -272,8 +272,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			// 注意：BeanFactory是管理容器中Bean的工厂；FactoryBean是创建对象的工厂Bean
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
-
-		else { // 判断，是否创建单例Bean
+		else { // 三级缓存不存在指定的bean,则创建。 判断，是否创建单例Bean
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
 			if (isPrototypeCurrentlyInCreation(beanName)) {
@@ -306,7 +305,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			// 创建的Bean是否需要进行类型验证，一般不需要
 			if (!typeCheckOnly) {
-				// 向容器标记指定的Bean已经被创建
+				// 向容器标记指定的Bean已经被创建。添加到alreadyCreated集合
 				markBeanAsCreated(beanName);
 			}
 
@@ -341,8 +340,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				// Create bean instance.
 				//  创建单例Bean
 				if (mbd.isSingleton()) {
-					sharedInstance = getSingleton(beanName, () -> {
+					sharedInstance = getSingleton(beanName, () -> {  //将单例对象放入一级缓存
 						try {
+							// 创建单例对象
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {
@@ -387,6 +387,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						Object scopedInstance = scope.get(beanName, () -> {
 							beforePrototypeCreation(beanName);
 							try {
+								// TODO
 								return createBean(beanName, mbd, args);
 							}
 							finally {

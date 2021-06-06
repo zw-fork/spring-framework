@@ -50,6 +50,7 @@ public abstract class AbstractBeanFactoryAwareAdvisingPostProcessor extends Abst
 				(ConfigurableListableBeanFactory) beanFactory : null);
 	}
 
+	// TODO
 	@Override
 	protected ProxyFactory prepareProxyFactory(Object bean, String beanName) {
 		if (this.beanFactory != null) {

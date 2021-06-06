@@ -68,6 +68,12 @@ public class OrderComparator implements Comparator<Object> {
 		return (o1, o2) -> doCompare(o1, o2, sourceProvider);
 	}
 
+	/**
+	 * Order排序
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
 	@Override
 	public int compare(@Nullable Object o1, @Nullable Object o2) {
 		return doCompare(o1, o2, null);

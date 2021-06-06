@@ -156,6 +156,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 * 添加三级缓存ObjectFactory数据
 	 * Add the given singleton factory for building the specified singleton
 	 * if necessary.
 	 * <p>To be called for eager registration of singletons, e.g. to be able to
@@ -212,6 +213,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					// 支持循环依赖，且二级缓存不存在时，则从三级缓存获取.同时，添加到二级缓存
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
+						//获取未初始化的bean，或AOP代理bean
 						//通过lamada表达式调用AbstractAutowireCapableBeanFactory.getEarlyBeanReference()方法
 						//返回还没完全初始化的早期Bean
 						singletonObject = singletonFactory.getObject();
@@ -253,7 +255,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
-					// 这个过程是调用createBean()方法
+					// 这个过程是调用AbstractBeanFactory#createBean()方法。获取创建的Bean实例对象
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
 				}
@@ -278,11 +280,13 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
-					// 后置处理：主要就是把singletonsCurrentlyInCreation标记正在创建的bean从集合移除
+					// Bean创建成功的后置处理：主要就是把singletonsCurrentlyInCreation标记正在创建的bean从集合移除
 					afterSingletonCreation(beanName);
 				}
+				//Bean创建成功，添加到
 				if (newSingleton) {
-					// 加入缓存中
+					// TODO
+					// 加入到一级缓存中。删除二、三级缓存数据
 					addSingleton(beanName, singletonObject);
 				}
 			}

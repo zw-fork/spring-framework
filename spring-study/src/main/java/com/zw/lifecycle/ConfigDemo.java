@@ -9,7 +9,7 @@ public class ConfigDemo {
 
 	@Bean
   	String str() {
-		System.out.println("hello word...");
+		System.out.println("创建@Configuration @Bean对象...");
 		return "hello word...";
 	}
 }

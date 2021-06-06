@@ -426,6 +426,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Object result = existingBean;
 		// 遍历容器的所创建的Bean添加
 		for (BeanPostProcessor processor : getBeanPostProcessors()) {
+			//AOP： AbstractAutoProxyCreator.postProcessBeforeInitialization()
 			Object current = processor.postProcessBeforeInitialization(result, beanName);
 			if (current == null) {
 				return result;
@@ -442,6 +443,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		Object result = existingBean;
 		for (BeanPostProcessor processor : getBeanPostProcessors()) {
+			// AbstractAutoProxyCreator.postProcessAfterInitialization()创建代理对象
 			Object current = processor.postProcessAfterInitialization(result, beanName);
 			if (current == null) {
 				return result;
@@ -549,7 +551,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
-			// 该步骤是我们真正的创建我们的bean实例对象的过程
+			// 该步骤是我们真正的创建我们的bean实例对象的过程。如果Bean需要被代理，则返回被代理对象
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isTraceEnabled()) {
 				logger.trace("Finished creating instance of bean '" + beanName + "'");
@@ -593,10 +595,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		if (instanceWrapper == null) {
-			//创建Bean实例： 使用合适的实例化策略来创建新的实例：工厂方法、构造函数注入、简单初始化
+
+			//创建Bean实例（没初始化）： 使用合适的实例化策略来创建新的实例：工厂方法、构造函数注入、简单初始化
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
-		// 从beanWrapper中获取我们的早期对象
+		// 从beanWrapper中获取我们的早期对象。一般是一个实例化没初始化的Bean对象
 		final Object bean = instanceWrapper.getWrappedInstance();
 		Class<?> beanType = instanceWrapper.getWrappedClass();
 		if (beanType != NullBean.class) {
@@ -627,17 +630,18 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
-			// 设置三级缓存
+
+			// 设置三级缓存。
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
 		// Initialize the bean instance.
 		Object exposedObject = bean;
 		try {
-			// 在初始化实例之后，这里就是判断当前bean是否依赖了其他的bean，如果依赖了，
-			// 就会递归的调用getBean()方法尝试获取目标bean
+			// 处理循环依赖：在初始化实例之后，这里就是判断当前bean是否依赖了其他的bean，如果依赖了，就会递归的调用getBean()方法尝试获取目标bean
 			//赋值：依赖注入，给我们的属性进行赋值(调用set)
 			populateBean(beanName, mbd, instanceWrapper);
+
 			// 进行对象初始化操作(在这里可能生成代理对象)
 			// AbstractAutoProxyCreator.postProcessAfterInitialization()判断Bean是否需要被代理，如果需要会返回被代理对象
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
@@ -997,6 +1001,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
+	 * 获取未初始化的Bean对象：获取bean实例对象，或AOP代理对象
 	 * Obtain a reference for early access to the specified bean,
 	 * typically for the purpose of resolving a circular reference.
 	 * @param beanName the name of the bean (for error handling purposes)
@@ -1010,6 +1015,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {
 					SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;
+					// 如果bean需要被AOP代理对象，通过AbstractAutoProxyCreator.getEarlyBeanReference()返回被代理对象。
+					// 否则，返回原始bean对象
+					// 如果是AOP，则获取提前曝光代理earlyProxyReferences
 					exposedObject = ibp.getEarlyBeanReference(exposedObject, beanName);
 				}
 			}
@@ -1247,6 +1255,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				return autowireConstructor(beanName, mbd, null, null);
 			}
 			else {
+				// 使用默认无参构造方法实例化Bean
 				return instantiateBean(beanName, mbd);
 			}
 		}
@@ -1517,7 +1526,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		if (pvs != null) {
-			// 正在注入的方法：对属性进行注入
+			// 对属性进行依赖注入
 			applyPropertyValues(beanName, mbd, bw, pvs);
 		}
 	}
@@ -1786,7 +1795,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					}
 					originalValue = new DependencyDescriptor(new MethodParameter(writeMethod, 0), true);
 				}
-				// 转换属性值，例如将引用转换为IOC容器中实例化对象引用
+				// 从三级缓存获取依赖注入的Bean对象。 转换属性值，例如将引用转换为IOC容器中实例化对象引用
 				Object resolvedValue = valueResolver.resolveValueIfNecessary(pv, originalValue);
 				// 转换之后的属性值
 				Object convertedValue = resolvedValue;
@@ -1857,7 +1866,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	/**
 	 * 初始化Bean步骤：
 	 * 	1. 若bean实现了XXXAware接口，先执行对应方法
-	 * 	2. 调用Bean后置处理器，执行postProcessorsBeforeInitialization方法
+	 * 	2. 调用Bean后置处理器，执行postProcessorsBeforeInitialization方法。
+	 * 		AOP动态代理：AbstractAutoProxyCreator.postProcessBeforeInitialization()
 	 * 	3. 若bean实现了InitializingBean，则执行afterPropertiesSet()
 	 * 	4. 调用Bean后置处理器，执行postProcessAfterInitialization方法
 	 *
@@ -1886,21 +1896,21 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}, getAccessControlContext());
 		}
 		else {
-			// 若我们的bean实现了XXXAware接口进行分发的回调
+			// 若我们的bean实现了XXXAware接口，进行相关的回调
 			invokeAwareMethods(beanName, bean);
 		}
 
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
+
 			//1. 初始化Bean前置处理
 			//调用我们的bean的后置处理器的BeanPostProcessor.postProcessorsBeforeInitialization方法，@PostCust注解方法
-			//生成代理对象
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
 		try {
 			//
-			//2. 调用初始化方法
+			//2. 调用初始化方法。InitializingBean、afterPropertiesSet、init-method相关方法
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
 		catch (Throwable ex) {
@@ -1909,7 +1919,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					beanName, "Invocation of init method failed", ex);
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
-			// 3. 初始化Bean完成后的，后置处理
+			// 3. 初始化Bean完成后的，执行后置处理。创建代理对象
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 

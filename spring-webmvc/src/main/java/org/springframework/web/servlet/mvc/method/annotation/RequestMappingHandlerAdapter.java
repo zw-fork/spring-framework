@@ -790,6 +790,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		}
 		else {
 			// No synchronization on session demanded at all...
+			// TODO
 			mav = invokeHandlerMethod(request, response, handlerMethod);
 		}
 
@@ -875,13 +876,13 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				});
 				invocableMethod = invocableMethod.wrapConcurrentResult(result);
 			}
-
+			// 反射调用controller方法，获取返回值
 			invocableMethod.invokeAndHandle(webRequest, mavContainer);
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				return null;
 			}
 
-			// 返回ModelAndView
+			// 返回ModelAndView。 restController 返回null
 			return getModelAndView(mavContainer, modelFactory, webRequest);
 		}
 		finally {

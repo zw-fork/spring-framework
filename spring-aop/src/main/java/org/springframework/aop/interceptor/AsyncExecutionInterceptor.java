@@ -99,6 +99,7 @@ public class AsyncExecutionInterceptor extends AsyncExecutionAspectSupport imple
 	 */
 	@Override
 	@Nullable
+	// TODO
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
 		Class<?> targetClass = (invocation.getThis() != null ? AopUtils.getTargetClass(invocation.getThis()) : null);
 		Method specificMethod = ClassUtils.getMostSpecificMethod(invocation.getMethod(), targetClass);
@@ -110,6 +111,7 @@ public class AsyncExecutionInterceptor extends AsyncExecutionAspectSupport imple
 					"No executor specified and no default executor set on AsyncExecutionInterceptor either");
 		}
 
+		// 通过线程执行任务
 		Callable<Object> task = () -> {
 			try {
 				Object result = invocation.proceed();

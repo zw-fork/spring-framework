@@ -1055,12 +1055,13 @@ public class DispatcherServlet extends FrameworkServlet {
 					}
 				}
 
-				// 前置拦截HandlerInterceptor：判断请求是否被拦截器的preHandle()方法拦截
+				//通过HandlerExecutionChain调用HandlerInterceptor拦截器集合。判断请求是否被拦截器的preHandle()方法拦截
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
 				// Actually invoke the handler.
+				// mappedHandler.getHandler()为HandlerMethod，封装了Controller中映射方法
 				// 4. 实际的处理器请求，返回结果视图对象。@restController时，mv为null
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
@@ -1070,7 +1071,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 				// 结果视图对象的处理
 				applyDefaultViewName(processedRequest, mv);
-				// 后置拦截处理HandlerInterceptor：判断请求是否被postHandle()方法拦截处理
+				// 通过HandlerExecutionChain调用后置拦截处理HandlerInterceptor集合：判断请求是否被postHandle()方法拦截处理
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
@@ -1081,7 +1082,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				// making them available for @ExceptionHandler methods and other scenarios.
 				dispatchException = new NestedServletException("Handler dispatch failed", err);
 			}
-			// 最后使用response返回给前端
+			// 处理结果。最后使用response返回给前端
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
 		catch (Exception ex) {
@@ -1129,7 +1130,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		boolean errorView = false;
 
-		if (exception != null) {
+		if (exception != null) {  //处理异常
 			if (exception instanceof ModelAndViewDefiningException) {
 				logger.debug("ModelAndViewDefiningException encountered", exception);
 				mv = ((ModelAndViewDefiningException) exception).getModelAndView();
@@ -1143,7 +1144,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Did the handler return a view to render?
 		if (mv != null && !mv.wasCleared()) {
-			// 页面数据渲染。将
+			// 渲染视图，页面数据渲染。
 			render(mv, request, response);
 			if (errorView) {
 				WebUtils.clearErrorRequestAttributes(request);

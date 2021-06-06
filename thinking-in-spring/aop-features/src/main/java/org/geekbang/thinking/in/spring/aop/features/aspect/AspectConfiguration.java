@@ -43,7 +43,7 @@ public class AspectConfiguration {
         return pjp.proceed();
     }
 
-    @Before("anyPublicMethod()")          // Join Point 拦截动作
+  //  @Before("anyPublicMethod()")          // Join Point 拦截动作
     public void beforeAnyPublicMethod() throws Throwable {
         Random random = new Random();
 

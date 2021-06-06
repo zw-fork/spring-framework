@@ -45,30 +45,30 @@ public class AspectJAnnotationUsingAPIDemo {
         // 增加 Aspect 配置类。
         proxyFactory.addAspect(AspectConfiguration2.class);
 
-//        proxyFactory.addAdvice(new MethodBeforeAdvice() {
-//            @Override
-//            public void before(Method method, Object[] args, Object target) throws Throwable {
-//                if ("put".equals(method.getName()) && args.length == 2) {
-//                    System.out.printf("[MethodBeforeAdvice] 当前存放是 Key: %s , Value : %s \n", args[0], args[1]);
-//                }
-//            }
-//        });
-//
-//        // 添加 AfterReturningAdvice
-//        proxyFactory.addAdvice(new AfterReturningAdvice() {
-//
-//            @Override
-//            public void afterReturning(Object returnValue, Method method, Object[] args, Object target)
-//                    throws Throwable {
-//                if ("put".equals(method.getName()) && args.length == 2) {
-//                    System.out.printf("[AfterReturningAdvice] 当前存放是 Key: %s , 新存放的 Value : %s , 之前关联的 Value : %s\n ",
-//                            args[0],    // key
-//                            args[1],    // new value
-//                            returnValue // old value
-//                    );
-//                }
-//            }
-//        });
+        proxyFactory.addAdvice(new MethodBeforeAdvice() {
+            @Override
+            public void before(Method method, Object[] args, Object target) throws Throwable {
+                if ("put".equals(method.getName()) && args.length == 2) {
+                    System.out.printf("[MethodBeforeAdvice] 当前存放是 Key: %s , Value : %s \n", args[0], args[1]);
+                }
+            }
+        });
+
+        // 添加 AfterReturningAdvice
+        proxyFactory.addAdvice(new AfterReturningAdvice() {
+
+            @Override
+            public void afterReturning(Object returnValue, Method method, Object[] args, Object target)
+                    throws Throwable {
+                if ("put".equals(method.getName()) && args.length == 2) {
+                    System.out.printf("[AfterReturningAdvice] 当前存放是 Key: %s , 新存放的 Value : %s , 之前关联的 Value : %s\n ",
+                            args[0],    // key
+                            args[1],    // new value
+                            returnValue // old value
+                    );
+                }
+            }
+        });
 
         // 存储数据
         // cache.put("1", "A");
